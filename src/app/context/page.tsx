@@ -22,7 +22,7 @@ export default function ContextPage() {
 
       <ContextGraph systems={systems} people={people} objects={objects} edges={edges} />
 
-      <Card className="mt-4">
+      <Card className="mt-6">
         <CardHeader>
           <div>
             <CardTitle>Context Gap Detection</CardTitle>

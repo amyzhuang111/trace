@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex min-w-0 flex-1 flex-col">
             <Header />
             <main className="flex-1 overflow-y-auto scrollbar-thin bg-background">
-              <div className="mx-auto max-w-[1400px] px-6 py-6">{children}</div>
+              <div className="mx-auto max-w-[1480px] px-10 py-10">{children}</div>
             </main>
           </div>
         </div>

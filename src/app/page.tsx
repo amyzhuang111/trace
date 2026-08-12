@@ -69,7 +69,7 @@ export default function OverviewPage() {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-6">
         <Card className="col-span-2">
           <CardHeader>
             <div>
@@ -158,7 +158,7 @@ export default function OverviewPage() {
         </Card>
       </div>
 
-      <Card className="mt-4">
+      <Card className="mt-6">
         <CardHeader>
           <div>
             <CardTitle>The Core Flow</CardTitle>

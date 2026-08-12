@@ -44,7 +44,7 @@ export default function EvalsPage() {
         description="You have not fully specified an agent until you have specified how its work will be judged. Every case pairs a task with weighted, thresholded verifiers."
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <div>
             <CardTitle>Verifiers</CardTitle>
@@ -56,7 +56,7 @@ export default function EvalsPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
             <div>

@@ -63,7 +63,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "cv11", "ss01";
-  font-size: 13.5px;
+  font-size: 14.5px;
 }
 
 ::selection {

@@ -13,7 +13,7 @@ import { Download } from "lucide-react";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Card className="mb-4">
+    <Card className="mb-6">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
@@ -61,7 +61,7 @@ export default function ReadoutPage() {
         }
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardContent className="pt-4">
           <div className="text-[15px] font-semibold text-foreground">{readout.headline}</div>
           <p className="mt-2 text-[13.5px] leading-relaxed text-foreground">{readout.recommendation}</p>
@@ -99,7 +99,7 @@ export default function ReadoutPage() {
         <BulletList items={keyFailureModes} />
       </Section>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         <Section title="Pilot Requirements">
           <BulletList items={readout.pilotRequirements} />
         </Section>

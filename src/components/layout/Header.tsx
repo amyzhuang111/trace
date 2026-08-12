@@ -14,7 +14,7 @@ export function Header() {
   const engagement = useEngagementStore((s) => s.engagement);
 
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-surface px-5">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-border/60 bg-surface px-8">
       <div className="flex items-center gap-2 text-[13px] text-muted">
         <span className="font-semibold text-foreground">{engagement.companyName}</span>
         <span className="text-border-strong">·</span>

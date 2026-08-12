@@ -26,7 +26,7 @@ export default function ExperimentsPage() {
         description="Pick the lowest-cost configuration that reliably clears the business quality bar — not the most capable model by default."
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <div>
             <CardTitle>Quality × Cost × Latency</CardTitle>
@@ -62,7 +62,7 @@ export default function ExperimentsPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         {experiments.map((e, i) => (
           <div key={e.id} onClick={() => setSelectedId(e.id)} className="cursor-pointer">
             <ExperimentCard

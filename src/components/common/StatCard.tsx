@@ -17,10 +17,10 @@ export function StatCard({
   const toneClass =
     tone === "success" ? "text-success" : tone === "warning" ? "text-warning" : tone === "danger" ? "text-danger" : "text-foreground";
   return (
-    <Card className={cn("px-4 py-3", className)}>
+    <Card className={cn("px-5 py-4", className)}>
       <div className="text-[11px] font-medium uppercase tracking-wide text-muted">{label}</div>
-      <div className={cn("mt-1.5 text-2xl font-semibold tabular-nums", toneClass)}>{value}</div>
-      {sublabel && <div className="mt-0.5 text-[12px] text-muted-2">{sublabel}</div>}
+      <div className={cn("mt-2 text-3xl font-semibold tabular-nums tracking-tight", toneClass)}>{value}</div>
+      {sublabel && <div className="mt-1 text-[12px] text-muted-2">{sublabel}</div>}
     </Card>
   );
 }

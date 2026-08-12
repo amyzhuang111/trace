@@ -31,7 +31,7 @@ export default function PilotPage() {
         description="A structured go / no-go checklist across business, data, agent, evaluation, and security readiness."
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <div>
             <CardTitle>Pilot Recommendation</CardTitle>
@@ -54,7 +54,7 @@ export default function PilotPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">Blocking Issues</div>
               <ul className="space-y-1">
@@ -79,12 +79,12 @@ export default function PilotPage() {
         </CardContent>
       </Card>
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>Readiness Checklist</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-5 gap-6">
             {CATEGORIES.map((cat) => (
               <ChecklistSection key={cat} category={cat} items={pilotDecision.checklist.filter((c) => c.category === cat)} />
             ))}

@@ -24,7 +24,7 @@ export default function FailuresPage() {
         description="Failures should not disappear into logs. Every meaningful failure becomes a corrected rule, a new verifier, or a regression test."
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>Failure → Learning Loop</CardTitle>
         </CardHeader>

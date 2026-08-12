@@ -18,7 +18,7 @@ export default function OpportunityPage() {
         description="Five candidate workflows were scored on the same criteria. Here's why this one was selected — and not a generic list of dozens of AI use cases."
       />
 
-      <Card className="mb-4">
+      <Card className="mb-6">
         <CardHeader>
           <div>
             <CardTitle>Candidate Opportunities, Ranked</CardTitle>
@@ -30,7 +30,7 @@ export default function OpportunityPage() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-6">
         <Card className="col-span-2">
           <CardHeader>
             <div>
@@ -57,7 +57,7 @@ export default function OpportunityPage() {
         </Card>
       </div>
 
-      <Card className="mt-4">
+      <Card className="mt-6">
         <CardHeader>
           <CardTitle>Why This Workflow?</CardTitle>
         </CardHeader>
