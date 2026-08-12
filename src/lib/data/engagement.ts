@@ -8,7 +8,7 @@ export const engagement: Engagement = {
   useCase: "Executive Account Brief Agent",
   objective:
     "Determine whether an AI agent can reliably produce executive-ready strategic account briefs while reducing preparation time by at least 60%.",
-  status: "evaluate",
+  status: "deploy",
   lastUpdated: "2026-08-08",
   qualityThreshold: 0.85,
 };

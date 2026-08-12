@@ -289,23 +289,6 @@ export type Blocker = {
   status: "open" | "resolved";
 };
 
-export type PilotWorkstream = {
-  id: string;
-  name: string;
-  owner: string;
-  status: "not-started" | "in-progress" | "blocked" | "done";
-  nextMilestone: string;
-  blockerIds: string[];
-};
-
-export type PilotMetric = {
-  id: string;
-  category: "business" | "quality" | "trust" | "operational" | "safety";
-  label: string;
-  target: string;
-  status: "tracking" | "not-started";
-};
-
 export type RoiAssumptions = {
   briefsPerMonth: number;
   currentPrepHours: number;
@@ -335,7 +318,9 @@ export type ExecutiveReadout = {
   generatedAt: string;
 };
 
-export type EngagementStatus = "discover" | "specify" | "evaluate" | "pilot" | "improve";
+// Mercor Enterprise's real four-stage lifecycle (Discover/Deploy/Improve/Monetize), not a
+// Trace-invented taxonomy — see README for how this engagement's pages map onto each stage.
+export type EngagementStatus = "discover" | "deploy" | "improve" | "monetize";
 
 export type Engagement = {
   id: string;
@@ -366,8 +351,6 @@ export type EngagementState = {
   experiments: Experiment[];
   failures: Failure[];
   blockers: Blocker[];
-  pilotWorkstreams: PilotWorkstream[];
-  pilotMetrics: PilotMetric[];
   pilotDecision: PilotDecision;
   roiAssumptions: RoiAssumptions;
   readout: ExecutiveReadout;

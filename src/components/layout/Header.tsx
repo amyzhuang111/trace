@@ -4,11 +4,10 @@ import { useEngagementStore } from "@/store/useEngagementStore";
 import { formatDate } from "@/lib/utils";
 
 const STAGE_LABELS: Record<string, string> = {
-  discover: "Discovery",
-  specify: "Specification",
-  evaluate: "Evaluation Design",
-  pilot: "Pilot Decision",
-  improve: "Improvement Loop",
+  discover: "Discover",
+  deploy: "Deploy — Evaluation Design",
+  improve: "Improve",
+  monetize: "Monetize",
 };
 
 export function Header() {

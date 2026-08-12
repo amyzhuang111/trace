@@ -5,8 +5,6 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChecklistSection } from "@/components/pilot/ChecklistSection";
-import { WorkstreamTable } from "@/components/pilot/WorkstreamTable";
-import { PilotMetricsGrid } from "@/components/pilot/PilotMetricsGrid";
 import { RoiCalculator } from "@/components/pilot/RoiCalculator";
 import { Progress } from "@/components/ui/progress";
 import { formatPct } from "@/lib/utils";
@@ -23,7 +21,7 @@ const RECOMMENDATION_LABEL: Record<string, string> = {
 
 export default function PilotPage() {
   const state = useEngagementStore((s) => s);
-  const { pilotDecision, pilotWorkstreams, pilotMetrics, blockers } = state;
+  const { pilotDecision } = state;
   const status = getPilotStatus(state);
 
   return (
@@ -83,18 +81,6 @@ export default function PilotPage() {
 
       <Card className="mb-4">
         <CardHeader>
-          <div>
-            <CardTitle>Pilot Workstreams</CardTitle>
-            <CardDescription>Owner, status, and next milestone for each track required to reach deployment</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <WorkstreamTable workstreams={pilotWorkstreams} blockers={blockers} />
-        </CardContent>
-      </Card>
-
-      <Card className="mb-4">
-        <CardHeader>
           <CardTitle>Readiness Checklist</CardTitle>
         </CardHeader>
         <CardContent>
@@ -103,18 +89,6 @@ export default function PilotPage() {
               <ChecklistSection key={cat} category={cat} items={pilotDecision.checklist.filter((c) => c.category === cat)} />
             ))}
           </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mb-4">
-        <CardHeader>
-          <div>
-            <CardTitle>Pilot Success Metrics</CardTitle>
-            <CardDescription>What &ldquo;success&rdquo; means once the cohort is live — quality and safety metrics are already tracked today via the eval suite</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <PilotMetricsGrid metrics={pilotMetrics} />
         </CardContent>
       </Card>
 

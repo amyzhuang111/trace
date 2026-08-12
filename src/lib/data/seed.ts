@@ -9,8 +9,6 @@ import { verifiers, environments, evalCases } from "./evals";
 import { experiments } from "./experiments";
 import { failures } from "./failures";
 import { blockers } from "./blockers";
-import { pilotWorkstreams } from "./workstreams";
-import { pilotMetrics } from "./pilotMetrics";
 import { roiAssumptions } from "./roi";
 import { pilotDecision } from "./pilot";
 import { readout } from "./readout";
@@ -53,8 +51,6 @@ export function getInitialState(): EngagementState {
     experiments,
     failures,
     blockers,
-    pilotWorkstreams,
-    pilotMetrics,
     pilotDecision,
     roiAssumptions,
     readout,

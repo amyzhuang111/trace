@@ -10,12 +10,12 @@ import { formatPct } from "@/lib/utils";
 import { getPilotStatus } from "@/lib/derive/pilot";
 import { ArrowRight, CircleDot } from "lucide-react";
 
+// Mercor Enterprise's real four-stage lifecycle, not a Trace-invented one — see README.
 const TIMELINE = [
-  { key: "discover", label: "Discover" },
-  { key: "specify", label: "Specify" },
-  { key: "evaluate", label: "Evaluate" },
-  { key: "pilot", label: "Pilot" },
-  { key: "improve", label: "Improve" },
+  { key: "discover", label: "Discover", deliverable: "Ranked opportunities, workflow + context map, ROI estimates" },
+  { key: "deploy", label: "Deploy", deliverable: "Agent spec, evaluation suite, pilot readiness" },
+  { key: "improve", label: "Improve", deliverable: "Model selection, prompt/tool optimization, monitoring" },
+  { key: "monetize", label: "Monetize", deliverable: "Not applicable to this engagement", notApplicable: true },
 ];
 
 const RECOMMENDATION_LABEL: Record<string, string> = {
@@ -124,8 +124,8 @@ export default function OverviewPage() {
           <CardContent>
             <ol className="space-y-0">
               {TIMELINE.map((stage, i) => {
-                const done = i < currentStageIndex;
-                const active = i === currentStageIndex;
+                const done = !stage.notApplicable && i < currentStageIndex;
+                const active = !stage.notApplicable && i === currentStageIndex;
                 return (
                   <li key={stage.key} className="flex items-start gap-3 pb-4 last:pb-0 relative">
                     {i < TIMELINE.length - 1 && (
@@ -134,7 +134,9 @@ export default function OverviewPage() {
                     <span
                       className={
                         "z-10 mt-0.5 h-[15px] w-[15px] shrink-0 rounded-full border-2 " +
-                        (active
+                        (stage.notApplicable
+                          ? "border-dashed border-muted-2 bg-surface"
+                          : active
                           ? "border-accent bg-accent-soft"
                           : done
                           ? "border-success bg-success"
@@ -142,9 +144,10 @@ export default function OverviewPage() {
                       }
                     />
                     <div className="text-[13px]">
-                      <div className={active ? "font-semibold text-foreground" : done ? "text-foreground" : "text-muted"}>
+                      <div className={stage.notApplicable ? "text-muted-2" : active ? "font-semibold text-foreground" : done ? "text-foreground" : "text-muted"}>
                         {stage.label}
                       </div>
+                      <div className="text-[11px] text-muted-2 mt-0.5 leading-snug">{stage.deliverable}</div>
                       {active && <div className="text-[12px] text-muted mt-0.5">Current stage</div>}
                     </div>
                   </li>

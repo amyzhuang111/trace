@@ -45,19 +45,20 @@ Enterprise AI deployment is not simply a model-selection problem. The difficult 
 
 ## Modules
 
-| Route | What it shows |
-|---|---|
-| `/` | Engagement command center — KPIs, current recommendation, timeline |
-| `/discovery` | Five stakeholder interviews with transcripts, extracted workflow steps, tacit judgment, and structured discovery notes (objectives, signals, decision rules, exceptions, constraints, metrics) |
-| `/context` | Organizational context graph (people, systems, objects) and open context gaps |
-| `/opportunity` | Five candidate workflows scored and ranked on the same criteria, with a "why this score" rationale for each |
-| `/agent-spec` | The agent specification and architecture (integrations, skills, tools), with every rule traced back to interview evidence, plus a worked customer-evidence-to-eval-case example |
-| `/evals` | 24 eval cases, 8 weighted verifiers, and a coverage matrix across data/account/request conditions |
-| `/experiments` | Four configurations — baseline, rejected, committed, and candidate — compared on quality × cost × latency against the committed quality bar |
-| `/failures` | Structured failure analysis feeding a failure → learning loop |
-| `/pilot` | Go/no-go recommendation, pilot workstreams (owner, status, next milestone, blockers), a readiness checklist, target pilot success metrics, and an editable ROI model |
-| `/readout` | One-page executive engagement memo, exportable to Markdown |
-| `/research` | Public-fact / project-inference / fictional-data sourcing notes |
+Each module produces one of the deliverables enterprise AI engagements are actually judged on:
+
+| Route | What it shows | Deliverable it produces |
+|---|---|---|
+| `/` | Engagement command center — KPIs, current recommendation, timeline against the Discover → Deploy → Improve → Monetize lifecycle | — |
+| `/discovery` | Five stakeholder interviews with transcripts, extracted workflow steps, tacit judgment, and structured discovery notes (objectives, signals, decision rules, exceptions, constraints, metrics) | Structured workflow knowledge |
+| `/context` | Organizational context graph (people, systems, objects) and open context gaps | Workflow + context map |
+| `/opportunity` | Five candidate workflows scored and ranked on the same criteria, with a "why this score" rationale for each | Ranked list of agent opportunities + prioritized roadmap |
+| `/agent-spec` | The agent specification and architecture (integrations, skills, tools), with every rule traced back to interview evidence, plus a worked customer-evidence-to-eval-case example | Production-ready agent spec |
+| `/evals` | 24 eval cases, 8 weighted verifiers, and a coverage matrix across data/account/request conditions | Custom evaluation suite |
+| `/experiments` | Four configurations — baseline, rejected, committed, and candidate — compared on quality × cost × latency against the committed quality bar | Model selection / optimization |
+| `/failures` | Structured failure analysis feeding a failure → learning loop | Evaluation monitoring |
+| `/pilot` | Go/no-go recommendation, a readiness checklist, and an editable ROI model | ROI estimates + execution plan |
+| `/readout` | One-page executive engagement memo, exportable to Markdown | Executive-ready recommendation |
 
 Every number that appears more than once in the product — the committed score, the quality threshold, the open blocker list, the ROI figures — is computed once (`src/lib/derive/`, `src/lib/scoring/`) and read everywhere else, rather than typed separately per page.
 
@@ -81,22 +82,16 @@ OPENAI_API_KEY=
 
 Next.js, TypeScript, React, Tailwind CSS, shadcn/ui, Zustand, Zod, Recharts, React Flow.
 
-## What Trace Demonstrates
+## How This Maps to Mercor Enterprise
 
-**Customer Discovery** — Turns stakeholder interviews into structured workflow knowledge, and reconciles conflicting definitions and priorities across stakeholders rather than deferring to a single voice.
+Trace's engagement lifecycle (`/` timeline) uses Mercor Enterprise's own four stages, not an invented one, and each module targets a specific deliverable from that stage:
 
-**Structured Problem Solving** — Ranks five candidate AI opportunities against the same explicit decision criteria and shows the reasoning behind each score, not just the number.
+**Discover (Agent Diagnostics)** — `/discovery`, `/context`, `/opportunity` produce exactly Mercor's named Discover deliverables: a workflow + context map and a ranked list of agent opportunities with a prioritized roadmap.
 
-**Product Translation** — Converts a specific line of customer feedback into a product requirement, an agent behavior, a verifier, and eval cases — a traceable chain from what was said to what gets tested.
+**Deploy (Agent Deployment)** — `/agent-spec` and `/evals` produce a production-ready agent spec and a custom evaluation suite; `/pilot` is the go/no-go gate before anything ships.
 
-**AI Evaluation** — Defines business-specific verifiers, blocking thresholds, and test coverage, and treats evaluation as the control point for model selection and release decisions, not a score shown at the end.
+**Improve (Agent Optimization)** — `/experiments` is model selection and prompt/tool optimization; `/failures` is evaluation monitoring that feeds back into the spec and eval suite.
 
-**Engagement Delivery** — Tracks workstreams, owners, blockers, and next milestones from discovery through a pilot decision.
+**Monetize (Data Monetization)** — not applicable to this engagement. Meridian's Executive Account Brief workflow is an internal efficiency gain, not a data-licensing candidate, and Trace says so explicitly on the Overview timeline rather than pretending every engagement reaches every stage.
 
-**Commercial Judgment** — Connects deployment decisions to an editable, auditable ROI model with assumptions and projections clearly separated from anything measured.
-
-**Executive Communication** — Produces a concise, evidence-backed recommendation a non-technical stakeholder can act on.
-
-## A Note on Sourcing
-
-This project is informed by publicly documented Mercor Enterprise AI workflows and evaluation philosophy (Discover → Deploy → Improve → Monetize; evals as specification; environment/task/verifier). It does not use real Mercor customer data, is not affiliated with or presented as a Mercor product, and no fictional data is ever presented as real. See `/research` in the running app for a full breakdown of what's public fact, project inference, or fictional demo data.
+This project is informed by publicly documented Mercor Enterprise AI workflows and evaluation philosophy. It does not use real Mercor customer data, and is not affiliated with or presented as a Mercor product — Meridian Systems and its data are entirely fictional.

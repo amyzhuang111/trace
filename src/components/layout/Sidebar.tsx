@@ -13,7 +13,6 @@ import {
   Rocket,
   AlertTriangle,
   FileBarChart,
-  BookOpen,
   RotateCcw,
   Activity,
 } from "lucide-react";
@@ -72,18 +71,6 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-sidebar-border px-2 py-2">
-        <Link
-          href="/research"
-          className={cn(
-            "flex items-center gap-2.5 rounded-md px-2.5 py-[7px] mb-0.5 text-[12.5px] font-medium transition-colors",
-            pathname === "/research"
-              ? "bg-sidebar-active text-white"
-              : "text-sidebar-foreground hover:bg-sidebar-active/60 hover:text-white"
-          )}
-        >
-          <BookOpen size={15} strokeWidth={2} className="shrink-0" />
-          Research Notes
-        </Link>
         <button
           onClick={() => {
             if (confirm("Reset all demo data to its original seeded state? Any edits you've made will be lost.")) {
