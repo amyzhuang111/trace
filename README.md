@@ -1,5 +1,7 @@
 # Trace — Enterprise AI Engagement Simulator
 
+https://trace-swart.vercel.app/engagements/meridian
+
 > Trace explores the operating layer between enterprise expertise and production AI: discovering how work actually happens, identifying high-value workflows, translating expert judgment into agent requirements, defining customer-specific evaluation criteria, benchmarking candidate configurations, and making an evidence-backed deployment decision.
 
 ## The Problem
