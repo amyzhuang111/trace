@@ -1,0 +1,23 @@
+import { cn } from "@/lib/utils";
+
+export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <div className={cn("rounded-md border border-border bg-surface", className)}>{children}</div>
+  );
+}
+
+export function CardHeader({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("flex items-center justify-between gap-3 border-b border-border px-4 py-3", className)}>{children}</div>;
+}
+
+export function CardTitle({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <h3 className={cn("text-[13px] font-semibold text-foreground", className)}>{children}</h3>;
+}
+
+export function CardDescription({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <p className={cn("text-[12px] text-muted mt-0.5", className)}>{children}</p>;
+}
+
+export function CardContent({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("px-4 py-3", className)}>{children}</div>;
+}

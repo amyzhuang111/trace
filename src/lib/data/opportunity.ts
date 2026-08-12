@@ -1,0 +1,113 @@
+import { OpportunityCandidate } from "@/types";
+
+export const opportunities: OpportunityCandidate[] = [
+  {
+    id: "opp-exec-brief",
+    workflowName: "Executive Account Brief Agent",
+    oneLiner: "Synthesizes CRM, support, usage, and meeting-note context into a concise, evidence-grounded brief before executive meetings.",
+    selected: true,
+    scores: {
+      businessValue: 5,
+      aiSuitability: 4,
+      dataReadiness: 3,
+      executionFeasibility: 4,
+      evaluationReadiness: 4,
+      deploymentSafety: 3,
+      timeToValue: 4,
+    },
+    whyScoreNotes: {
+      businessValue: "160+ briefs/month, each currently taking senior account managers 2.5 hours — the largest measured time sink of the five candidates.",
+      dataReadiness: "All five source systems exist and are connected, but three context gaps (health-score definitions, usage baseline, sponsor tracking) are still open.",
+      deploymentSafety: "Drafts only — a human approves every brief before an executive sees it, and the agent cannot write to any source system.",
+      evaluationReadiness: "24-case eval suite already built, covering standard, ambiguous, missing, stale, conflicting, and adversarial conditions.",
+    },
+    whyThisWorkflow: [
+      "Knowledge intensive — draws on judgment senior account managers built over years, not a lookup task.",
+      "High repetition — 160+ briefs per month across the strategic account book.",
+      "Measurable current baseline — prep time and quality are already tracked, so improvement is verifiable.",
+      "Reversible output — a brief is a draft artifact, not an autonomous action taken on the customer.",
+      "Human review already exists in the current process — no new approval step to invent.",
+      "Strong data footprint — CRM, support, and usage data already exist for every account.",
+      "No autonomous financial or customer-facing action — the agent drafts, it does not act.",
+    ],
+    whyNotFullyAutonomous:
+      "Final prioritization of what an executive hears remains judgment-heavy and the output is customer-facing at the executive level, where a wrong call has outsized cost. Human review stays in the loop.",
+    recommendedMaturity: "Bounded Agent + Human Approval",
+  },
+  {
+    id: "opp-renewal-risk",
+    workflowName: "Renewal Risk Intelligence Agent",
+    oneLiner: "Continuously monitors accounts approaching renewal and surfaces early risk signals to account managers between formal review cycles.",
+    selected: false,
+    scores: {
+      businessValue: 4,
+      aiSuitability: 4,
+      dataReadiness: 3,
+      executionFeasibility: 3,
+      evaluationReadiness: 3,
+      deploymentSafety: 3,
+      timeToValue: 3,
+    },
+    whyScoreNotes: {
+      executionFeasibility: "Needs a standing monitoring job rather than an on-demand call, which is a heavier lift than the brief agent's request/response shape.",
+      evaluationReadiness: "Would reuse most of the Executive Account Brief eval suite's risk-judgment cases, but needs new cases for proactive-alert timing and alert fatigue.",
+    },
+  },
+  {
+    id: "opp-expansion",
+    workflowName: "Expansion Opportunity Agent",
+    oneLiner: "Flags accounts showing credible, corroborated expansion signals for the sales and CS teams to act on.",
+    selected: false,
+    scores: {
+      businessValue: 3,
+      aiSuitability: 3,
+      dataReadiness: 3,
+      executionFeasibility: 3,
+      evaluationReadiness: 3,
+      deploymentSafety: 4,
+      timeToValue: 3,
+    },
+    whyScoreNotes: {
+      aiSuitability: "Expansion signals are noisier than risk signals — a usage spike alone is a weak, easily-confused-with-noise indicator (see tacit rule tr-15).",
+      businessValue: "Fewer qualifying accounts per month than renewal or brief prep, so the aggregate time saved is smaller.",
+    },
+  },
+  {
+    id: "opp-support-escalation",
+    workflowName: "Support Escalation Intelligence Agent",
+    oneLiner: "Triages and summarizes high-severity support incidents for the Support Operations Lead, normalizing severity across taxonomies.",
+    selected: false,
+    scores: {
+      businessValue: 4,
+      aiSuitability: 3,
+      dataReadiness: 4,
+      executionFeasibility: 3,
+      evaluationReadiness: 3,
+      deploymentSafety: 3,
+      timeToValue: 3,
+    },
+    whyScoreNotes: {
+      dataReadiness: "Zendesk is well-instrumented, but the legacy/current severity-taxonomy mismatch (gap-04) is unresolved and would need to be fixed first.",
+      aiSuitability: "Severity normalization is a narrower, more mechanical judgment call than executive prioritization — good fit, but a smaller problem.",
+    },
+  },
+  {
+    id: "opp-meeting-followup",
+    workflowName: "Customer Meeting Follow-Up Agent",
+    oneLiner: "Drafts action-item recap emails to customers after internal meetings, based on meeting notes and prior commitments.",
+    selected: false,
+    scores: {
+      businessValue: 3,
+      aiSuitability: 4,
+      dataReadiness: 3,
+      executionFeasibility: 4,
+      evaluationReadiness: 4,
+      deploymentSafety: 2,
+      timeToValue: 4,
+    },
+    whyScoreNotes: {
+      deploymentSafety: "Lowest of the five — the draft output is customer-facing correspondence, not an internal brief, so an ungrounded claim has a much shorter path to the customer.",
+      executionFeasibility: "Simplest scope of the five — single output format, single trigger, smallest input surface.",
+    },
+  },
+];
