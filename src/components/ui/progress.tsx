@@ -15,9 +15,9 @@ export function Progress({
 }) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
-    <div className={cn("relative h-1.5 w-full rounded-full bg-black/[0.06]", className)}>
+    <div className={cn("relative h-1.5 w-full rounded-sm bg-black/[0.06]", className)}>
       <div
-        className={cn("h-full rounded-full bg-accent transition-all", barClassName)}
+        className={cn("h-full rounded-sm bg-accent transition-all", barClassName)}
         style={{ width: `${pct}%` }}
       />
       {markers?.map((m, i) => (

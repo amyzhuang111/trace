@@ -1,31 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
+  --background: #f2f2f2;
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --foreground: #18181b;
-  --muted: #52525b;
-  --muted-2: #a1a1aa;
-  --border: #e5e7eb;
-  --border-strong: #d1d5db;
-  --accent: #4f46e5;
-  --accent-foreground: #ffffff;
-  --accent-soft: #eef2ff;
+  --foreground: #0d0806;
+  --muted: #555250;
+  --muted-2: #868382;
+  --border: #dad9d9;
+  --border-strong: #b6b4b4;
+  --accent: #f05305;
+  --accent-foreground: #0d0806;
+  --accent-fill: #fca174;
+  --accent-fill-foreground: #0d0806;
+  --accent-soft: #fed6c3;
   --success: #15803d;
   --success-soft: #dcfce7;
   --warning: #b45309;
   --warning-soft: #fef3c7;
   --danger: #b91c1c;
   --danger-soft: #fee2e2;
-  --sidebar: #18181b;
-  --sidebar-foreground: #d4d4d8;
-  --sidebar-muted: #71717a;
-  --sidebar-active: #27272a;
-  --sidebar-border: #27272a;
-  --font-sans: var(--font-inter);
+  --sidebar: #25201e;
+  --sidebar-foreground: #dad9d9;
+  --sidebar-muted: #8f8b88;
+  --sidebar-active: #332c29;
+  --sidebar-border: #3a332f;
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --font-sans: var(--font-roboto-flex);
+  --font-heading: var(--font-bai-jamjuree);
   --font-mono: var(--font-geist-mono);
-  --radius: 8px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
 }
 
 @theme inline {
@@ -38,6 +48,8 @@
   --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-fill: var(--accent-fill);
+  --color-accent-fill-foreground: var(--accent-fill-foreground);
   --color-accent-soft: var(--accent-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
@@ -50,8 +62,17 @@
   --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-active: var(--sidebar-active);
   --color-sidebar-border: var(--sidebar-border);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 }
 
 * {
@@ -64,6 +85,10 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "cv11", "ss01";
   font-size: 14.5px;
+}
+
+.font-heading {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {

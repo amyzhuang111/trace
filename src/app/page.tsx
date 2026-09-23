@@ -1,194 +1,152 @@
 "use client";
 
 import Link from "next/link";
-import { useEngagementStore } from "@/store/useEngagementStore";
-import { StatCard } from "@/components/common/StatCard";
+import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatPct } from "@/lib/utils";
-import { getPilotStatus } from "@/lib/derive/pilot";
-import { ArrowRight, CircleDot } from "lucide-react";
+import { StatCard } from "@/components/common/StatCard";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { OperatorStatusBadge } from "@/components/operator/OperatorStatusBadge";
+import { HilbertConfidenceBadge } from "@/components/analysis/ConfidenceBadge";
+import { useHilbertStore } from "@/store/useHilbertStore";
+import { customerMoments } from "@/lib/mock-data/readout";
+import { formatUsd } from "@/lib/utils";
 
-// Mercor Enterprise's real four-stage lifecycle, not a Trace-invented one — see README.
-const TIMELINE = [
-  { key: "discover", label: "Discover", deliverable: "Ranked opportunities, workflow + context map, ROI estimates" },
-  { key: "deploy", label: "Deploy", deliverable: "Agent spec, evaluation suite, pilot readiness" },
-  { key: "improve", label: "Improve", deliverable: "Model selection, prompt/tool optimization, monitoring" },
-  { key: "monetize", label: "Monetize", deliverable: "Not applicable to this engagement", notApplicable: true },
-];
+export default function OperatorHome() {
+  const investigations = useHilbertStore((s) => s.investigations);
+  const productFeedback = useHilbertStore((s) => s.productFeedback);
 
-const RECOMMENDATION_LABEL: Record<string, string> = {
-  go: "Pilot-ready",
-  "conditional-no-go": "Not yet pilot-ready",
-  "no-go": "Not pilot-ready",
-};
+  const revenueAtRisk = investigations
+    .filter((i) => ["testing", "new", "waiting_for_data"].includes(i.operatorStatus))
+    .reduce((sum, i) => sum + i.economicImpact, 0);
+  const validatedUpside = investigations
+    .filter((i) => i.operatorStatus === "validated" || i.operatorStatus === "ready_for_customer")
+    .reduce((sum, i) => sum + i.economicImpact, 0);
+  const openInvestigations = investigations.filter((i) =>
+    ["new", "testing", "waiting_for_data"].includes(i.operatorStatus),
+  ).length;
+  const openFeedback = productFeedback.filter((f) => f.status === "open").length;
 
-export default function OverviewPage() {
-  const state = useEngagementStore((s) => s);
-  const { engagement, interviews, contextGaps, evalCases, verifiers } = state;
-  const status = getPilotStatus(state);
-
-  const extractedInterviews = interviews.filter((i) => i.extraction);
-  const mappedStepIds = new Set(extractedInterviews.flatMap((i) => i.extraction!.steps.map((s) => s.id)));
-  const openGaps = contextGaps.filter((g) => g.status === "open");
-  const prioritizationVerifier = verifiers.find((v) => v.id === "ver-strategic-prioritization");
-  const prioritizationScore = status.committed.verifierBreakdown.find((v) => v.verifierId === "ver-strategic-prioritization")?.score ?? 0;
-
-  const currentStageIndex = TIMELINE.findIndex((t) => t.key === engagement.status);
+  const reasoningChecks = investigations.filter((i) => i.operatorNote);
 
   return (
     <div>
-      <PageHeader
-        title="Engagement Overview"
-        description={engagement.objective}
-      />
+      <PageHeader title="Northstar Market" description="Growth operator workspace · Updated 11 min ago" />
 
-      <div className="grid grid-cols-4 gap-3 mb-6 lg:grid-cols-7">
-        <StatCard label="Expert Interviews" value={String(interviews.length)} sublabel="completed" />
-        <StatCard label="Workflow Steps" value={String(mappedStepIds.size)} sublabel="mapped" />
-        <StatCard
-          label="Context Gaps"
-          value={`${openGaps.length}`}
-          sublabel={`open of ${contextGaps.length} identified`}
-          tone={openGaps.length > 0 ? "warning" : "success"}
-        />
-        <StatCard label="Eval Tasks" value={String(evalCases.length)} sublabel="authored" />
-        <StatCard
-          label="Committed Eval Score"
-          value={formatPct(status.currentScore)}
-          sublabel={status.committed.label}
-          tone={status.ready ? "success" : "warning"}
-        />
-        <StatCard label="Quality Threshold" value={formatPct(status.requiredScore)} sublabel={`${formatPct(status.scoreGap, 0)} gap remaining`} />
-        <StatCard
-          label="Pilot Blockers"
-          value={String(status.openBlockers.length)}
-          sublabel="must clear before pilot"
-          tone={status.openBlockers.length > 0 ? "danger" : "success"}
-        />
-      </div>
-
-      <div className="grid grid-cols-3 gap-6">
-        <Card className="col-span-2">
-          <CardHeader>
-            <div>
-              <CardTitle>Current Recommendation</CardTitle>
-              <CardDescription>Based on the committed configuration&apos;s latest full-suite run</CardDescription>
-            </div>
-            <Badge tone={status.recommendation === "go" ? "success" : "warning"}>
-              {RECOMMENDATION_LABEL[status.recommendation]}
-            </Badge>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-[13px] text-foreground">
-              <li className="flex gap-2">
-                <CircleDot size={14} className="mt-0.5 shrink-0 text-success" />
-                Source grounding is strong ({formatPct(status.committed.verifierBreakdown.find((v) => v.verifierId === "ver-source-grounding")?.score ?? 0)}).
-              </li>
-              {prioritizationVerifier && (
-                <li className="flex gap-2">
-                  <CircleDot size={14} className="mt-0.5 shrink-0 text-warning" />
-                  Executive prioritization remains inconsistent ({formatPct(prioritizationScore)} vs. {formatPct(prioritizationVerifier.threshold)} bar).
-                </li>
-              )}
-              {status.openBlockers.map((b) => (
-                <li key={b.id} className="flex gap-2">
-                  <CircleDot size={14} className="mt-0.5 shrink-0 text-danger" />
-                  {b.description}
-                </li>
-              ))}
-              {!status.ready && (
-                <li className="flex gap-2">
-                  <CircleDot size={14} className="mt-0.5 shrink-0 text-danger" />
-                  Performance remains below the {formatPct(status.requiredScore)} release threshold.
-                </li>
-              )}
-            </ul>
-            <div className="mt-4 flex gap-2">
-              <Link href="/pilot" className="inline-flex items-center gap-1 text-[12.5px] font-medium text-accent hover:underline">
-                View full pilot readiness <ArrowRight size={13} />
-              </Link>
-              <span className="text-border-strong">·</span>
-              <Link href="/experiments" className="inline-flex items-center gap-1 text-[12.5px] font-medium text-accent hover:underline">
-                Compare experiments <ArrowRight size={13} />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Engagement Timeline</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ol className="space-y-0">
-              {TIMELINE.map((stage, i) => {
-                const done = !stage.notApplicable && i < currentStageIndex;
-                const active = !stage.notApplicable && i === currentStageIndex;
-                return (
-                  <li key={stage.key} className="flex items-start gap-3 pb-4 last:pb-0 relative">
-                    {i < TIMELINE.length - 1 && (
-                      <span className="absolute left-[7px] top-4 h-full w-px bg-border" />
-                    )}
-                    <span
-                      className={
-                        "z-10 mt-0.5 h-[15px] w-[15px] shrink-0 rounded-full border-2 " +
-                        (stage.notApplicable
-                          ? "border-dashed border-muted-2 bg-surface"
-                          : active
-                          ? "border-accent bg-accent-soft"
-                          : done
-                          ? "border-success bg-success"
-                          : "border-border-strong bg-surface")
-                      }
-                    />
-                    <div className="text-[13px]">
-                      <div className={stage.notApplicable ? "text-muted-2" : active ? "font-semibold text-foreground" : done ? "text-foreground" : "text-muted"}>
-                        {stage.label}
-                      </div>
-                      <div className="text-[11px] text-muted-2 mt-0.5 leading-snug">{stage.deliverable}</div>
-                      {active && <div className="text-[12px] text-muted mt-0.5">Current stage</div>}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="mt-6">
-        <CardHeader>
-          <div>
-            <CardTitle>The Core Flow</CardTitle>
-            <CardDescription>How this engagement moves from tacit knowledge to a deployment decision</CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap items-center gap-2 text-[12.5px]">
-            {[
-              ["Interview an expert", "/discovery"],
-              ["Extract the workflow", "/discovery"],
-              ["Map systems + judgment", "/context"],
-              ["Score the opportunity", "/opportunity"],
-              ["Generate the agent spec", "/agent-spec"],
-              ["Convert standards to evals", "/evals"],
-              ["Run model experiments", "/experiments"],
-              ["Compare quality × cost × latency", "/experiments"],
-              ["Decide pilot readiness", "/pilot"],
-              ["Turn failures into eval cases", "/failures"],
-            ].map(([label, href], i, arr) => (
-              <span key={label} className="flex items-center gap-2">
-                <Link href={href} className="rounded-full border border-border-strong bg-black/[0.02] px-2.5 py-1 text-foreground hover:border-accent hover:text-accent transition-colors">
-                  {label}
-                </Link>
-                {i < arr.length - 1 && <ArrowRight size={12} className="text-muted-2 shrink-0" />}
-              </span>
-            ))}
+      <Card className="mb-6">
+        <CardContent className="py-5">
+          <h2 className="text-[15px] font-semibold text-foreground">{openInvestigations} findings need judgment</h2>
+          <p className="mt-1.5 max-w-3xl text-[13px] leading-relaxed text-muted">
+            Topline remains healthy, but Hilbert detected a material deterioration in the newest paid-acquisition
+            cohorts. AOV is masking weaker repeat behavior. Two additional opportunities are ready for validation,
+            and {openFeedback} product-feedback item{openFeedback === 1 ? "" : "s"} remain{openFeedback === 1 ? "s" : ""} unresolved.
+          </p>
+          <div className="mt-5 grid grid-cols-4 gap-3">
+            <StatCard label="Revenue at risk" value={formatUsd(revenueAtRisk)} tone="danger" />
+            <StatCard label="Validated upside" value={formatUsd(validatedUpside)} tone="success" />
+            <StatCard label="Open investigations" value={String(openInvestigations)} />
+            <StatCard label="Product feedback" value={`${openFeedback} open`} tone={openFeedback > 0 ? "warning" : "neutral"} />
           </div>
         </CardContent>
       </Card>
+
+      <div className="mb-6">
+        <h2 className="mb-3 text-[13.5px] font-semibold text-foreground">Investigation queue</h2>
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Finding</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead className="text-right">Economic impact</TableHead>
+                <TableHead>Confidence</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Next step</TableHead>
+                <TableHead />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {investigations.map((inv) => (
+                <TableRow key={inv.id}>
+                  <TableCell className="max-w-[280px]">
+                    <Link href={`/investigations/${inv.slug}`} className="font-medium hover:text-accent">
+                      {inv.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-muted">{inv.category}</TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {inv.economicImpact > 0 ? formatUsd(inv.economicImpact) : "—"}
+                  </TableCell>
+                  <TableCell>
+                    <HilbertConfidenceBadge pct={inv.hilbertConfidence} />
+                  </TableCell>
+                  <TableCell>
+                    <OperatorStatusBadge status={inv.operatorStatus} />
+                  </TableCell>
+                  <TableCell className="max-w-[220px] truncate text-muted">
+                    {inv.validationChecks.some((c) => !c.completed)
+                      ? "Complete remaining validation checks"
+                      : inv.operatorStatus === "ready_for_customer"
+                        ? "Add to customer readout"
+                        : "Review evidence"}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/investigations/${inv.slug}`}
+                      className="flex items-center gap-1 text-[12px] font-medium text-accent hover:underline"
+                    >
+                      Open investigation <ArrowRight size={12} />
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+
+      <div className="mb-6 grid grid-cols-2 gap-4">
+        <div>
+          <h2 className="mb-3 text-[13.5px] font-semibold text-foreground">Customer moments</h2>
+          <div className="flex flex-col gap-3">
+            {customerMoments.map((m) => (
+              <Card key={m.title} className="p-4">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[13px] font-medium text-foreground">{m.title}</span>
+                  <span className="text-[11.5px] text-muted-2">{m.when}</span>
+                </div>
+                <p className="mt-1.5 text-[12px] text-muted">
+                  <span className="font-medium text-foreground">Needs ready:</span> {m.needsReady}
+                </p>
+                <p className="mt-0.5 text-[12px] text-muted">
+                  <span className="font-medium text-foreground">Outstanding:</span> {m.outstandingAnalysis}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-3 text-[13.5px] font-semibold text-foreground">Hilbert reasoning checks</h2>
+          <div className="flex flex-col gap-3">
+            {reasoningChecks.map((inv) => (
+              <Card key={inv.id} className="p-4">
+                <p className="text-[13px] text-foreground">
+                  Hilbert attributes {inv.driverDecomposition?.[0]?.pct ? `${inv.driverDecomposition[0].pct}%` : "a majority"} of{" "}
+                  {inv.title.toLowerCase()} to {inv.hilbertPrimaryDriver?.toLowerCase() ?? "a single driver"}.
+                </p>
+                <p className="mt-1.5 text-[12px] italic text-muted">{inv.operatorNote}</p>
+                <Link
+                  href={`/investigations/${inv.slug}`}
+                  className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-accent hover:underline"
+                >
+                  Test reasoning <ArrowRight size={12} />
+                </Link>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

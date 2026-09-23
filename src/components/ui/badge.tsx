@@ -13,16 +13,19 @@ const TONE_CLASSES: Record<BadgeTone, string> = {
 export function Badge({
   tone = "neutral",
   className,
+  title,
   children,
 }: {
   tone?: BadgeTone;
   className?: string;
+  title?: string;
   children: React.ReactNode;
 }) {
   return (
     <span
+      title={title}
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap",
+        "inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 text-[11px] font-medium leading-none whitespace-nowrap",
         TONE_CLASSES[tone],
         className
       )}
@@ -45,8 +48,10 @@ export function toneForConfidence(c: "high" | "medium" | "low"): BadgeTone {
 }
 
 export function toneForStatus(s: string): BadgeTone {
-  if (["done", "resolved", "regression-added", "go"].includes(s)) return "success";
-  if (["pending", "in-progress", "open", "conditional-no-go"].includes(s)) return "warning";
-  if (["blocked", "no-go"].includes(s)) return "danger";
+  if (["validated", "ready_for_customer", "shipped", "accepted", "resolved", "supported", "closed"].includes(s))
+    return "success";
+  if (["testing", "triaged", "partially_supported", "monitoring", "draft"].includes(s)) return "accent";
+  if (["new", "waiting_for_data", "open", "not_shared", "untested", "inconclusive"].includes(s)) return "warning";
+  if (["rejected", "ruled_out"].includes(s)) return "danger";
   return "neutral";
 }

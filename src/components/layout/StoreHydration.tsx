@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { useEngagementStore } from "@/store/useEngagementStore";
+import { useHilbertStore } from "@/store/useHilbertStore";
 
 export function StoreHydration() {
   useEffect(() => {
-    useEngagementStore.persist.rehydrate();
+    useHilbertStore.persist.rehydrate();
   }, []);
   return null;
 }

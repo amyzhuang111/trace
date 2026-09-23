@@ -1,0 +1,3642 @@
+CLAUDE.md — Hilbert GQR Growth Mechanics Corpus
+
+0. Build this
+
+Build an internal research utility for Hilbert called:
+
+Hilbert GQR Growth Mechanics Corpus
+
+A source-backed, continuously refreshable corpus of Grocery, QSR, and Retail growth mechanics from public-company filings and official investor materials.
+
+This is designed primarily for Hilbert's Growth Operator — Grocery, QSR & Retail team, but it should also help:
+
+Account Executives
+
+Head of Grocery / QSR / Retail
+
+Product
+
+Growth / Strategy team members
+
+The product answers questions like:
+
+Which QSRs are growing through transactions versus ticket?
+
+Which retailers are seeing traffic improve while ticket weakens?
+
+Which grocers are growing digital materially faster than underlying comps?
+
+Where is reported growth driven by unit expansion rather than existing-store performance?
+
+Which companies report meaningful loyalty or membership momentum?
+
+How does a current customer growth pattern compare with publicly reported peer patterns?
+
+What does management actually call the metric, and how is it defined?
+
+Has a company's definition of a metric changed over time?
+
+This must use real, source-backed public data.
+
+There must be zero fake KPI observations in the production application.
+
+1. Why this product
+
+Hilbert already focuses on deeply integrating company data, encoding business-specific metric logic, detecting changes across products/cohorts/channels, reasoning about root causes, and driving action.
+
+Do NOT rebuild:
+
+Hilbert's customer-data ingestion
+
+Hilbert's semantic / metric layer
+
+Hilbert's Detections
+
+Hilbert's root-cause engine
+
+Hilbert's CRM / ad integrations
+
+Hilbert's customer-facing growth interface
+
+an internal ML evaluation platform
+
+This product is complementary.
+
+It creates a public reference layer for vertical growth mechanics.
+
+Hilbert can tell an operator:
+
+"This customer's revenue is rising while frequency is weakening."
+
+The corpus helps the operator ask:
+
+"Is the broader vertical also showing ticket-led growth with traffic pressure?"
+
+or:
+
+"Which public QSRs have recently reported transaction-led rather than ticket-led comp growth?"
+
+or:
+
+"How are public membership retailers describing digital and loyalty momentum?"
+
+This is contextual intelligence, not causal evidence.
+
+2. Why this is specifically useful to a Growth Operator
+
+The Growth Operator role requires fluency in:
+
+cohorts
+
+basket dynamics
+
+visit frequency
+
+acquisition / channel economics
+
+loyalty
+
+promotions
+
+LTV
+
+real behavioral effects versus price / mix artifacts
+
+Public-company reporting repeatedly exposes adjacent operating mechanics:
+
+comparable / identical sales
+
+traffic / transactions / guest counts
+
+average ticket / average check
+
+digital / eCommerce growth
+
+loyalty or membership growth
+
+store / restaurant openings
+
+margins
+
+unit volumes
+
+category mix
+
+management commentary on pricing and promotion
+
+The corpus should make those mechanics searchable and comparable without requiring an operator to manually re-read dozens of earnings releases every quarter.
+
+3. Research-grounded source strategy
+
+Use primary sources first.
+
+Tier 1 — SEC EDGAR
+
+Primary source for U.S. public companies.
+
+Use:
+
+company ticker → CIK mapping
+
+submissions API
+
+company facts API
+
+8-K filings
+
+10-Q filings
+
+10-K filings
+
+earnings-release exhibits filed with 8-K, especially Exhibit 99.1
+
+Official SEC resources:
+
+https://www.sec.gov/files/company_tickers.json
+https://data.sec.gov/submissions/CIK##########.json
+https://data.sec.gov/api/xbrl/companyfacts/CIK##########.json
+https://www.sec.gov/Archives/edgar/data/{CIK}/{ACCESSION_NO_DASHES}/
+
+SEC APIs do not require an API key.
+
+Important implementation constraint:
+
+send an identifying User-Agent
+
+keep aggregate request rate comfortably below SEC's 10 requests/second fair-access ceiling
+
+target <= 5 requests/second
+
+cache aggressively
+
+never crawl SEC indiscriminately
+
+Required env:
+
+SEC_USER_AGENT="HilbertGrowthCorpus your-email@example.com"
+
+Fail clearly if absent.
+
+Tier 2 — Official investor-relations HTML
+
+Use official company IR pages when:
+
+an operating KPI is not present in structured XBRL,
+
+an earnings release is easier to obtain directly,
+
+the company publishes monthly sales updates,
+
+a KPI is disclosed on an official results page but not standard SEC facts.
+
+Only ingest official company domains / verified IR domains.
+
+Examples of source types:
+
+quarterly results release
+
+annual results release
+
+monthly sales release
+
+official investor update
+
+Tier 3 — Manual official source URL
+
+Allow an operator to paste an official IR / company source URL.
+
+Button:
+
+Ingest official source
+
+The source must be tagged:
+
+SEC
+
+Company IR
+
+Company newsroom
+
+Investor presentation
+
+Do not ingest third-party analyst articles into the benchmark corpus.
+
+4. Important source insight
+
+SEC XBRL is excellent for standardized financial facts such as:
+
+revenue
+
+gross profit
+
+operating income
+
+net income
+
+inventory
+
+assets / liabilities
+
+But many operator-relevant KPIs are company-specific and live in earnings-release text or tables:
+
+comparable sales
+
+transactions
+
+traffic
+
+average ticket
+
+digital mix
+
+loyalty
+
+membership
+
+store openings
+
+Therefore build a two-layer corpus:
+
+STANDARD FINANCIAL FACTS
+SEC XBRL / Company Facts
+        +
+OPERATING KPI EXTRACTION
+8-K exhibits / official IR releases
+        ↓
+Normalized source-backed observations
+
+5. Product name / positioning
+
+Use:
+
+Hilbert GQR Growth Mechanics
+
+Subtitle:
+
+Source-backed operating benchmarks for Grocery, QSR & Retail
+
+Do not call every number a "benchmark."
+
+Use:
+
+observation
+
+peer range
+
+operating pattern
+
+reported metric
+
+growth mechanic
+
+Only calculate a benchmark when the metrics are sufficiently comparable.
+
+6. No-demo-data rule
+
+MANDATORY.
+
+Production application must contain:
+
+zero fake quarterly results
+
+zero fabricated companies
+
+zero fake metrics
+
+zero fake citations
+
+zero mock earnings releases
+
+zero hardcoded "example insights"
+
+It is acceptable to seed a registry of real public companies and tickers.
+
+It is NOT acceptable to seed hardcoded KPI values.
+
+All KPI observations shown in the production UI must originate from:
+
+an actual fetched primary-source document, and
+
+a stored source reference / evidence span.
+
+If no sync has been run, show an empty state.
+
+7. Empty state
+
+Before data ingestion:
+
+Build the corpus
+
+Pull source-backed Grocery, QSR, and Retail operating metrics from SEC filings and official investor releases.
+
+Buttons:
+
+Sync starter universe
+
+Add company
+
+Ingest official source
+
+Do not render empty fake charts.
+
+8. MVP company universe
+
+Seed only real company metadata.
+
+Do NOT seed their metrics.
+
+Create:
+
+config/companies.ts
+
+Initial universe:
+
+Grocery / Club / Mass Merchant
+
+[
+  { ticker: "WMT", name: "Walmart", vertical: "grocery_retail", tags: ["mass_merchant", "grocery", "membership"] },
+  { ticker: "COST", name: "Costco Wholesale", vertical: "grocery_retail", tags: ["warehouse_club", "grocery", "membership"] },
+  { ticker: "KR", name: "Kroger", vertical: "grocery", tags: ["grocery", "digital"] },
+  { ticker: "ACI", name: "Albertsons Companies", vertical: "grocery", tags: ["grocery", "loyalty", "digital"] },
+  { ticker: "SFM", name: "Sprouts Farmers Market", vertical: "grocery", tags: ["specialty_grocery"] },
+  { ticker: "BJ", name: "BJ's Wholesale Club", vertical: "grocery_retail", tags: ["warehouse_club", "membership", "grocery"] },
+  { ticker: "GO", name: "Grocery Outlet", vertical: "grocery", tags: ["discount_grocery"] },
+  { ticker: "TGT", name: "Target", vertical: "retail", tags: ["mass_merchant", "digital", "loyalty"] }
+]
+
+QSR / Restaurant
+
+[
+  { ticker: "MCD", name: "McDonald's", vertical: "qsr", tags: ["qsr", "loyalty", "digital"] },
+  { ticker: "SBUX", name: "Starbucks", vertical: "qsr", tags: ["coffee", "loyalty", "digital"] },
+  { ticker: "CMG", name: "Chipotle Mexican Grill", vertical: "qsr", tags: ["qsr", "digital"] },
+  { ticker: "YUM", name: "Yum! Brands", vertical: "qsr", tags: ["qsr", "franchise"] },
+  { ticker: "QSR", name: "Restaurant Brands International", vertical: "qsr", tags: ["qsr", "franchise"] },
+  { ticker: "DPZ", name: "Domino's Pizza", vertical: "qsr", tags: ["pizza", "delivery", "loyalty"] },
+  { ticker: "WING", name: "Wingstop", vertical: "qsr", tags: ["qsr", "digital"] },
+  { ticker: "SHAK", name: "Shake Shack", vertical: "qsr", tags: ["qsr"] },
+  { ticker: "BROS", name: "Dutch Bros", vertical: "qsr", tags: ["coffee", "loyalty"] },
+  { ticker: "CAVA", name: "CAVA Group", vertical: "qsr", tags: ["qsr", "digital"] },
+  { ticker: "WEN", name: "Wendy's", vertical: "qsr", tags: ["qsr", "franchise"] }
+]
+
+Retail
+
+[
+  { ticker: "TJX", name: "TJX Companies", vertical: "retail", tags: ["off_price"] },
+  { ticker: "ROST", name: "Ross Stores", vertical: "retail", tags: ["off_price"] },
+  { ticker: "ANF", name: "Abercrombie & Fitch", vertical: "retail", tags: ["apparel"] },
+  { ticker: "GAP", name: "Gap", vertical: "retail", tags: ["apparel"] },
+  { ticker: "URBN", name: "Urban Outfitters", vertical: "retail", tags: ["apparel"] },
+  { ticker: "LULU", name: "lululemon athletica", vertical: "retail", tags: ["apparel", "international"] },
+  { ticker: "NKE", name: "NIKE", vertical: "retail", tags: ["apparel", "footwear", "direct"] },
+  { ticker: "DECK", name: "Deckers Outdoor", vertical: "retail", tags: ["footwear"] },
+  { ticker: "ULTA", name: "Ulta Beauty", vertical: "retail", tags: ["beauty", "loyalty"] },
+  { ticker: "BBY", name: "Best Buy", vertical: "retail", tags: ["electronics"] },
+  { ticker: "WSM", name: "Williams-Sonoma", vertical: "retail", tags: ["home"] },
+  { ticker: "HD", name: "Home Depot", vertical: "retail", tags: ["home_improvement"] },
+  { ticker: "LOW", name: "Lowe's", vertical: "retail", tags: ["home_improvement"] },
+  { ticker: "DG", name: "Dollar General", vertical: "retail", tags: ["value", "consumables"] },
+  { ticker: "DLTR", name: "Dollar Tree", vertical: "retail", tags: ["value"] },
+  { ticker: "FIVE", name: "Five Below", vertical: "retail", tags: ["value"] }
+]
+
+Do not hardcode CIKs.
+
+Resolve ticker → CIK from SEC's official ticker file at sync time.
+
+Allow adding / disabling companies in config.
+
+9. MVP sync scope
+
+Do NOT attempt to backfill twenty years.
+
+Default:
+
+Last 8 reported quarters
++
+latest annual filing
+
+For each company:
+
+submissions metadata
+
+relevant 8-Ks
+
+latest 10-Qs
+
+latest 10-K
+
+official earnings-release exhibits if discoverable
+
+company facts for standardized financials
+
+Command:
+
+npm run sync
+
+Options:
+
+npm run sync -- --ticker CMG
+npm run sync -- --ticker SBUX --quarters 12
+npm run sync -- --vertical qsr
+npm run sync -- --recent-only
+
+10. Zero-database architecture for easy build
+
+For the MVP, do NOT require a database.
+
+Use an ingestion/build pipeline that generates static JSON.
+
+Structure:
+
+data/
+  cache/
+    sec/
+    documents/
+  generated/
+    companies.json
+    documents.json
+    observations.json
+    periods.json
+    patterns.json
+    review-queue.json
+    coverage.json
+
+The Next.js UI reads generated JSON.
+
+Advantages:
+
+zero account setup
+
+zero hosted database
+
+easy local build
+
+easy Vercel deployment
+
+corpus is inspectable / versionable
+
+easy to share with team
+
+no invented backend complexity
+
+Later, a DB can replace the repository layer without redesigning the product.
+
+11. Commands
+
+Create:
+
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "sync": "tsx scripts/sync.ts",
+    "sync:company": "tsx scripts/sync-company.ts",
+    "rebuild:index": "tsx scripts/build-index.ts",
+    "validate:corpus": "tsx scripts/validate-corpus.ts",
+    "coverage": "tsx scripts/coverage-report.ts"
+  }
+}
+
+At end of sync:
+
+✓ 28 companies checked
+✓ 164 source documents indexed
+✓ 1,284 observations extracted
+✓ 1,031 auto-validated
+⚠ 253 observations need review
+✓ corpus generated
+
+Numbers above are output format examples only.
+
+Never hardcode them.
+
+12. SEC client
+
+Create:
+
+lib/sec/client.ts
+
+Requirements:
+
+server/script only
+
+explicit User-Agent
+
+rate limiter <= 5 requests / second
+
+retry exponential backoff on 429 / 5xx
+
+local disk cache
+
+timeout
+
+gzip support
+
+no browser calls to data.sec.gov because CORS is not supported
+
+Functions:
+
+getTickerMap()
+getCompanySubmissions(cik)
+getCompanyFacts(cik)
+getFilingIndex(cik, accession)
+getFilingDocument(url)
+
+Cache by URL hash.
+
+Store fetched timestamp.
+
+13. Filing discovery
+
+From submissions:
+
+Focus on:
+
+8-K
+
+10-Q
+
+10-K
+
+For 8-K:
+
+Look for earnings-related filings:
+
+Item 2.02
+
+earnings release exhibits
+
+Exhibit 99.1
+
+exhibit descriptions containing:
+
+earnings
+
+results
+
+press release
+
+quarterly
+
+financial results
+
+Use filing directory index.json where practical to discover documents.
+
+Construct archive directory using:
+
+const accessionNoDashes = accession.replaceAll("-", "");
+const cikNoLeadingZeros = String(Number(cik));
+
+Base:
+
+https://www.sec.gov/Archives/edgar/data/{cikNoLeadingZeros}/{accessionNoDashes}/
+
+Do not assume primaryDocument itself contains all operating KPIs.
+
+Prefer the earnings-release exhibit when present.
+
+14. Source-document model
+
+interface SourceDocument {
+  id: string;
+  companyId: string;
+  sourceType:
+    | "sec_8k_exhibit"
+    | "sec_8k"
+    | "sec_10q"
+    | "sec_10k"
+    | "official_ir_release"
+    | "official_ir_page";
+  url: string;
+  accessionNumber?: string;
+  filingDate?: string;
+  reportDate?: string;
+  title: string;
+  rawFormat: "html" | "text";
+  textHash: string;
+  fetchedAt: string;
+  primarySource: boolean;
+}
+
+V1 should prioritize HTML/text.
+
+Do NOT make PDF parsing necessary for the core product.
+
+Add PDF ingestion only as Phase 2.
+
+15. HTML cleaning
+
+Create:
+
+lib/extract/clean-html.ts
+
+Use:
+
+Cheerio
+
+remove scripts
+
+remove styles
+
+remove navigation boilerplate where obvious
+
+preserve table rows
+
+preserve headings
+
+preserve line breaks
+
+normalize whitespace
+
+Return:
+
+interface CleanDocument {
+  plainText: string;
+  blocks: TextBlock[];
+  tables: ExtractedTable[];
+}
+
+Important:
+
+Do not flatten all tables beyond recognition.
+
+Represent tables as:
+
+interface ExtractedTable {
+  caption?: string;
+  headers: string[];
+  rows: string[][];
+  surroundingText?: string;
+}
+
+16. Metric ontology
+
+Build a normalized ontology while preserving each company's native language.
+
+Topline
+
+net_sales
+net_sales_growth_pct
+revenue
+revenue_growth_pct
+systemwide_sales
+systemwide_sales_growth_pct
+
+Comparable / organic sales
+
+comp_sales_pct
+same_store_sales_pct
+identical_sales_pct
+same_shop_sales_pct
+comparable_club_sales_pct
+
+Normalize to:
+
+comparable_sales_growth_pct
+
+BUT preserve native label.
+
+Demand / traffic
+
+transaction_growth_pct
+traffic_growth_pct
+guest_count_growth_pct
+unit_volume_growth_pct
+
+Do NOT blindly equate traffic and transactions.
+
+Normalized family:
+
+demand_count_growth
+
+Native subtype required.
+
+Ticket / basket
+
+average_ticket_growth_pct
+average_check_growth_pct
+average_transaction_growth_pct
+aov_growth_pct
+
+Normalized family:
+
+ticket_basket_growth
+
+Native subtype required.
+
+Do NOT call this "price" unless management explicitly identifies pricing.
+
+Digital
+
+digital_sales_growth_pct
+ecommerce_sales_growth_pct
+digital_sales_mix_pct
+ecommerce_sales_mix_pct
+digitally_enabled_sales_growth_pct
+delivery_sales_growth_pct
+
+Preserve terminology changes.
+
+Loyalty / membership
+
+loyalty_members
+active_loyalty_users
+loyalty_member_growth_pct
+loyalty_sales
+loyalty_sales_growth_pct
+membership_fee_revenue
+membership_fee_growth_pct
+renewal_rate_pct
+premium_tier_penetration_pct
+
+Only store if explicitly reported.
+
+Footprint
+
+store_count
+restaurant_count
+club_count
+warehouse_count
+net_new_locations
+new_locations_opened
+location_growth_pct
+
+Profitability
+
+gross_margin_pct
+operating_margin_pct
+store_level_margin_pct
+restaurant_level_margin_pct
+adjusted_restaurant_level_margin_pct
+merchandise_margin
+
+Working capital / operational
+
+inventory
+inventory_growth_pct
+shrink_commentary
+returns_commentary
+
+Keep narrative metrics separate from numeric observations.
+
+17. Metric catalog structure
+
+Create:
+
+config/metrics.ts
+
+interface MetricDefinition {
+  id: string;
+  family: string;
+  displayName: string;
+  aliases: string[];
+  unit: "percent" | "usd" | "count" | "ratio" | "text";
+  polarity?: "higher" | "lower" | "contextual";
+  requiresScope: boolean;
+  comparabilityNotes: string;
+}
+
+Example:
+
+{
+  id: "comparable_sales_growth_pct",
+  family: "organic_growth",
+  displayName: "Comparable Sales Growth",
+  aliases: [
+    "comparable sales",
+    "comparable store sales",
+    "identical sales",
+    "same-store sales",
+    "same shop sales",
+    "same-shop sales",
+    "comparable restaurant sales",
+    "comparable club sales"
+  ],
+  unit: "percent",
+  requiresScope: true,
+  comparabilityNotes:
+    "Company definitions differ by eligible location age, geography, fuel/FX adjustments, and digital inclusion."
+}
+
+18. Native metric preservation
+
+This is non-negotiable.
+
+Observation:
+
+interface MetricObservation {
+  id: string;
+  companyId: string;
+
+  normalizedMetricId: string;
+  nativeMetricLabel: string;
+
+  value: number;
+  unit: string;
+
+  periodEnd: string;
+  periodStart?: string;
+  fiscalYear?: number;
+  fiscalQuarter?: string;
+  periodType: "quarter" | "year" | "month" | "ytd" | "ttm";
+
+  scope?: string;
+  geography?: string;
+  segment?: string;
+
+  adjustmentFlags: AdjustmentFlag[];
+
+  sourceDocumentId: string;
+  sourceUrl: string;
+
+  evidenceText: string;
+  definitionText?: string;
+
+  extractionMethod:
+    | "sec_xbrl"
+    | "regex"
+    | "table_parser"
+    | "llm_extractor"
+    | "manual";
+
+  validationStatus:
+    | "auto_validated"
+    | "needs_review"
+    | "reviewed";
+
+  extractionConfidence:
+    | "high"
+    | "medium"
+    | "low";
+}
+
+19. Adjustment flags
+
+type AdjustmentFlag =
+  | "reported"
+  | "constant_currency"
+  | "ex_fuel"
+  | "ex_fx"
+  | "ex_fuel_and_fx"
+  | "adjusted"
+  | "includes_ecommerce"
+  | "excludes_ecommerce"
+  | "calendar_adjusted"
+  | "unknown";
+
+Allow more than one.
+
+Examples:
+
+Costco may report:
+
+reported comparable sales
+
+comparable sales excluding gasoline and FX
+
+Store both as distinct observations.
+
+Do not choose one silently.
+
+20. Definition changes over time
+
+A major value of the corpus is detecting semantic changes.
+
+Example class:
+
+A company may rename or broaden:
+
+eCommerce comparable sales
+
+to:
+
+digitally-enabled comparable sales
+
+Do NOT merge these as identical without preserving:
+
+native label
+
+effective period
+
+source definition
+
+semantic change note
+
+Create:
+
+interface MetricDefinitionChange {
+  companyId: string;
+  normalizedMetricId: string;
+  effectiveDate: string;
+  oldNativeLabel?: string;
+  newNativeLabel: string;
+  sourceUrl: string;
+  note: string;
+}
+
+Surface these prominently.
+
+21. Fiscal-period handling
+
+Do not assume calendar quarters.
+
+Store:
+
+actual start date
+
+actual end date
+
+fiscal year
+
+fiscal quarter / period
+
+filing date
+
+UI should show:
+
+FY2026 Q2 · period ended Jun 30, 2026
+
+instead of simply:
+
+Q2 2026
+
+where ambiguity exists.
+
+For cross-company comparison:
+
+default x-axis:
+
+period end date
+
+Allow toggle:
+
+Fiscal quarter
+
+Calendar time
+
+22. Standard financial extraction
+
+Use SEC Company Facts.
+
+Start with a limited concept map.
+
+Examples:
+
+const xbrlConcepts = {
+  revenue: [
+    "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "SalesRevenueNet",
+    "Revenues"
+  ],
+  grossProfit: ["GrossProfit"],
+  operatingIncome: ["OperatingIncomeLoss"],
+  netIncome: ["NetIncomeLoss"],
+  inventory: ["InventoryNet"]
+};
+
+Do not assume every company uses the same concept.
+
+For each standardized fact:
+
+store original XBRL concept
+
+source form
+
+period
+
+filed date
+
+frame if available
+
+Deduplicate amended / repeated observations carefully.
+
+23. XBRL deduplication
+
+CompanyFacts can include the same period multiple times due to later filings.
+
+Create deterministic selection rules.
+
+For a desired fiscal period:
+
+prefer 10-Q / 10-K depending period,
+
+prefer facts with expected period duration,
+
+prefer latest filed version,
+
+preserve prior values only if restatement tracking is explicitly enabled.
+
+Never sum quarterly facts that are actually YTD facts without checking start/end dates.
+
+This is a common XBRL failure mode.
+
+Add tests.
+
+24. Operating KPI extraction — deterministic first
+
+Build a deterministic extractor before using AI.
+
+Pipeline:
+
+clean text
+↓
+find metric aliases
+↓
+extract containing sentence / table row
+↓
+find nearby numeric percentage / count / dollars
+↓
+detect direction
+↓
+detect scope
+↓
+detect adjustment flags
+↓
+create candidate observation
+↓
+validate evidence
+
+Example alias patterns:
+
+const patterns = {
+  compSales: [
+    /comparable (?:store|restaurant|club)? ?sales/i,
+    /identical sales/i,
+    /same[- ]store sales/i,
+    /same[- ]shop sales/i
+  ],
+  transactions: [
+    /comparable transactions/i,
+    /transactions/i,
+    /guest counts?/i,
+    /traffic/i
+  ],
+  ticket: [
+    /average ticket/i,
+    /average check/i
+  ],
+  digital: [
+    /digital sales/i,
+    /e-?commerce sales/i,
+    /digitally[- ]enabled/i
+  ]
+};
+
+Do not use one giant regex.
+
+Build small testable extractors.
+
+25. Direction parsing
+
+Handle:
+
+increased 4.2%
+
+increased by 4.2%
+
+grew 4.2%
+
+rose 4.2%
+
+up 4.2%
+
+decreased 4.2%
+
+declined 4.2%
+
+down 4.2%
+
+comparable sales of (1.0)%
+
+a 2% decline
+
+partially offset by a 1% increase
+
+Normalize to signed numeric value.
+
+Keep raw evidence.
+
+26. Table extraction
+
+Many releases put metrics in tables.
+
+Support simple table rows.
+
+Example conceptual table:
+
+Walmart U.S.
+Comparable sales     4.3%
+Transactions         2.1%
+Average ticket       2.2%
+
+Need:
+
+table section / segment context
+
+column period context
+
+row metric
+
+numeric value
+
+If table header contains multiple periods:
+
+create separate observations for each period.
+
+If header-period parsing is ambiguous:
+
+send to review queue.
+
+27. Evidence validation
+
+No observation can be auto-validated unless:
+
+source is primary,
+
+evidence text exists verbatim in cleaned source,
+
+native metric phrase exists in evidence or table context,
+
+numeric value can be reconciled to evidence,
+
+period is known,
+
+company is known,
+
+signed direction is known for growth metrics.
+
+Function:
+
+validateObservation(candidate, source): ValidationResult
+
+Return:
+
+{
+  valid: boolean;
+  reasons: string[];
+}
+
+Uncertain observations go to review queue.
+
+They must NOT appear in default peer comparisons.
+
+28. Optional LLM extraction
+
+AI is optional enhancement.
+
+Use environment:
+
+ANTHROPIC_API_KEY=
+ANTHROPIC_MODEL=
+
+Do not hardcode a current model name.
+
+If configured:
+
+Use AI only to extract structured candidates from primary-source text.
+
+Prompt must instruct:
+
+use only supplied source text
+
+never infer missing numbers
+
+preserve native metric wording
+
+return exact evidence substring
+
+return null when uncertain
+
+identify scope
+
+identify period
+
+identify adjustment
+
+identify metric definition notes
+
+Require strict structured JSON.
+
+Then run the SAME deterministic evidence validator.
+
+An AI output is not trusted merely because it parsed.
+
+29. LLM extraction schema
+
+const ExtractedMetricSchema = z.object({
+  nativeMetricLabel: z.string(),
+  normalizedMetricId: z.string(),
+  value: z.number(),
+  unit: z.enum(["percent", "usd", "count", "ratio"]),
+  direction: z.enum(["positive", "negative", "none"]),
+  periodLabel: z.string(),
+  scope: z.string().nullable(),
+  geography: z.string().nullable(),
+  segment: z.string().nullable(),
+  adjustmentFlags: z.array(z.string()),
+  evidenceText: z.string(),
+  definitionText: z.string().nullable()
+});
+
+Post-process direction/value consistency.
+
+30. Human review queue
+
+Route:
+
+/review
+
+This is the one internal curation page.
+
+Show candidate observations that failed auto-validation or are semantically ambiguous.
+
+Columns:
+
+company
+
+filing
+
+candidate metric
+
+value
+
+scope
+
+evidence
+
+issue
+
+Issues:
+
+ambiguous period
+
+ambiguous scope
+
+multiple values
+
+unknown adjustment
+
+new metric alias
+
+definition changed
+
+Actions:
+
+Approve locally
+
+Correct mapping
+
+Exclude
+
+Add alias
+
+For zero-backend MVP:
+
+store manual review overrides in:
+
+data/curation/overrides.json
+
+Because browser cannot safely write repository files on deployed Vercel, implement review writes only in local development through a server route.
+
+On deployed read-only mode:
+
+show review queue but disable write controls with:
+
+Review edits are available in local curation mode.
+
+This is acceptable.
+
+31. Curation overrides
+
+interface CurationOverride {
+  sourceDocumentId: string;
+  evidenceHash: string;
+  action: "approve" | "exclude" | "correct";
+  correctedObservation?: Partial<MetricObservation>;
+  note?: string;
+  reviewedAt: string;
+}
+
+Apply after extraction on rebuild.
+
+32. Corpus validation
+
+Command:
+
+npm run validate:corpus
+
+Fail build if:
+
+observation has no source URL,
+
+evidence is empty,
+
+company missing,
+
+period missing,
+
+normalized metric unknown,
+
+duplicate observation IDs,
+
+signed percent outside plausible bound unless explicitly allowed,
+
+reviewed observation source no longer exists in document cache.
+
+Warn:
+
+semantic definition change
+
+conflicting observations from same source/period
+
+adjusted + reported ambiguity
+
+33. Comparability model
+
+Do NOT compare everything that shares a normalized metric ID.
+
+Create a comparability check.
+
+Dimensions:
+
+normalized metric
+
+native subtype
+
+scope
+
+geography
+
+adjustment flags
+
+period type
+
+definition version
+
+Return:
+
+type Comparability = "high" | "medium" | "low" | "not_comparable";
+
+34. Comparability rules
+
+Examples:
+
+High
+
+comparable sales
+
+same geography
+
+same adjustment basis
+
+similar period type
+
+Medium
+
+normalized comparable sales
+
+one company calls it identical sales
+
+same geography / reported basis
+
+definition differs slightly
+
+Low
+
+reported comparable sales vs ex-fuel comparable sales
+
+Not comparable
+
+digital sales growth vs digital sales mix
+
+traffic vs average ticket
+
+companywide vs single segment without explicit selection
+
+UI must display comparability.
+
+35. Peer-range rule
+
+Only show computed peer median / range when:
+
+at least 5 observations,
+
+comparability is high or medium,
+
+periods overlap sufficiently,
+
+same vertical / peer group,
+
+no duplicate company periods.
+
+Label:
+
+Peer range · n=7 · medium comparability
+
+Tooltip must explain why.
+
+Never display false precision.
+
+36. Pattern engine
+
+One of the most useful features is a deterministic growth-mechanics pattern layer.
+
+This is not causal inference.
+
+Create:
+
+lib/patterns/rules.ts
+
+37. Pattern: ticket-led comp growth
+
+Condition:
+
+comparable sales > 0
+
+transaction / traffic growth < 0
+
+ticket / check growth > 0
+
+Label:
+
+Ticket-led growth with demand pressure
+
+Do NOT call it price-led unless source explicitly identifies pricing.
+
+Example operator interpretation:
+
+Topline comp growth is positive while reported customer/transaction volume is declining.
+
+38. Pattern: transaction-led growth
+
+Condition:
+
+comp sales > 0
+
+transaction / traffic growth > 0
+
+transaction contribution appears at least as large as ticket where both available
+
+Label:
+
+Demand-led comp growth
+
+39. Pattern: balanced comp growth
+
+Condition:
+
+comp >0
+
+transactions >0
+
+ticket >0
+
+Label:
+
+Traffic + ticket expansion
+
+40. Pattern: comp decline despite ticket support
+
+Condition:
+
+comp <0
+
+transactions <0
+
+ticket >0
+
+Label:
+
+Traffic decline overwhelms ticket
+
+This is highly relevant to growth-operator intuition.
+
+41. Pattern: digital outperformance
+
+Condition:
+
+digital/eCommerce growth available
+
+comparable or total sales growth available
+
+digital growth exceeds underlying sales growth by material threshold
+
+Default threshold:
+
++5 percentage points
+
+Label:
+
+Digital channel outperformance
+
+Make threshold configurable.
+
+42. Pattern: unit-expansion-led topline
+
+Condition:
+
+total sales growth materially exceeds comparable sales
+
+net new locations / location growth positive
+
+Label:
+
+Footprint expansion contributing materially to topline
+
+Do not numerically attribute exact share without data.
+
+43. Pattern: loyalty / membership momentum
+
+Condition requires at least one directly reported loyalty metric:
+
+loyalty user/member growth
+
+loyalty sales growth
+
+membership fee growth
+
+renewal growth
+
+Label:
+
+Reported loyalty / membership momentum
+
+No claim of incremental causal value.
+
+44. Pattern object
+
+interface GrowthPattern {
+  id: string;
+  companyId: string;
+  periodEnd: string;
+  type:
+    | "ticket_led_growth"
+    | "demand_led_growth"
+    | "balanced_growth"
+    | "traffic_decline_ticket_support"
+    | "digital_outperformance"
+    | "unit_expansion"
+    | "loyalty_momentum";
+  label: string;
+  observationIds: string[];
+  description: string;
+  confidence: "high" | "medium";
+}
+
+Every pattern must link to source observations.
+
+45. App routes
+
+Build:
+
+/
+ /search
+ /companies
+ /companies/[ticker]
+ /mechanics
+ /compare
+ /brief
+ /sources/[id]
+ /review
+ /coverage
+ /settings
+
+Default route / can redirect to /search.
+
+46. Search — primary interface
+
+This should NOT feel like a dashboard.
+
+Header:
+
+Search growth mechanics
+
+Large search input:
+
+Search companies, metrics, or patterns
+
+Examples as clickable query chips:
+
+traffic down, ticket up
+
+digital growth > comps
+
+loyalty growth
+
+negative comps
+
+transaction-led QSR
+
+membership grocery
+
+store expansion retail
+
+These are search affordances, not fake results.
+
+47. Search filters
+
+Filters:
+
+Vertical
+
+Grocery
+
+QSR
+
+Retail
+
+Metric
+
+Comparable sales
+
+Transactions / traffic
+
+Ticket / check
+
+Digital
+
+Loyalty / membership
+
+Locations
+
+Margin
+
+Pattern
+
+Demand-led
+
+Ticket-led
+
+Traffic pressure
+
+Digital outperformance
+
+Unit expansion
+
+Loyalty momentum
+
+Period
+
+Latest quarter
+
+Last 4 quarters
+
+Last 8 quarters
+
+Custom
+
+Source
+
+SEC
+
+Official IR
+
+Review status
+
+Default:
+Validated only
+
+48. Search result card
+
+Example structure using REAL data only:
+
+[Company] · [Fiscal Period]
+
+Pattern label
+
+Comparable sales       ...
+Transactions / traffic ...
+Ticket / check          ...
+Digital                 ...
+
+Native definitions:
+- "Comparable restaurant sales"
+- "Average check"
+
+Source: Official earnings release
+Period ended: ...
+
+Buttons:
+
+View company
+
+Open source
+
+Compare
+
+Add to brief
+
+Do not generate generic AI analysis for each result.
+
+Keep it operator-friendly.
+
+49. Company page
+
+Route:
+
+/companies/[ticker]
+
+Header:
+
+company
+
+ticker
+
+vertical
+
+latest source date
+
+coverage
+
+Tabs:
+
+Mechanics
+
+Metrics
+
+Sources
+
+Definitions
+
+50. Company Mechanics tab
+
+Timeline by quarter.
+
+Each quarter shows:
+
+comparable sales
+
+traffic / transactions
+
+ticket
+
+digital
+
+loyalty
+
+footprint
+
+margin
+
+Only fields actually reported.
+
+Missing:
+
+Not reported
+
+Never estimate.
+
+Show derived deterministic pattern if eligible.
+
+51. Definition timeline
+
+This is an important differentiator.
+
+Show company-native metric definitions over time.
+
+Example structure:
+
+2025 Q4
+Native label: Ecommerce comparable sales
+
+2026 Q1
+Native label: Digitally-enabled comparable sales
+Definition changed
+
+Click:
+
+View source definition
+
+This prevents false historical comparisons.
+
+52. Mechanics explorer
+
+Route:
+
+/mechanics
+
+Choose:
+
+Ticket-led growth
+
+Show all validated matching periods.
+
+Columns:
+
+company
+
+vertical
+
+period
+
+comp
+
+demand metric
+
+ticket
+
+digital
+
+source
+
+Useful question:
+
+Who is reporting positive topline while underlying customer counts / transactions weaken?
+
+This directly sharpens operator intuition.
+
+53. Compare
+
+Route:
+
+/compare
+
+Allow up to 6 companies.
+
+Choose normalized metric.
+
+Example:
+
+Comparable sales
+
+UI must show:
+
+native metric
+
+adjustment flags
+
+scope
+
+period
+
+comparability
+
+Chart only comparable observations.
+
+If definitions are too different:
+
+show:
+
+These observations should not be charted as equivalent.
+
+Then explain.
+
+54. Brief builder
+
+Route:
+
+/brief
+
+This is how the corpus helps AEs / customer prep.
+
+Operator selects:
+
+vertical
+
+peer companies
+
+time window
+
+mechanics
+
+Generate a concise source-backed Markdown brief.
+
+Example structure:
+
+QSR Growth Mechanics Brief
+
+Traffic / transaction direction
+
+Source-backed observations.
+
+Ticket / check direction
+
+Source-backed observations.
+
+Digital
+
+Source-backed observations.
+
+Loyalty
+
+Source-backed observations.
+
+Questions this suggests for customer analysis
+
+These are generic analytical questions, not customer claims.
+
+Examples:
+
+Is revenue growth coming from frequency, ticket, or both?
+
+Are paid-acquired cohorts showing the same downstream quality as organic cohorts?
+
+Is digital growth incremental or shifting channel mix?
+
+Are loyalty members actually increasing frequency after controlling for selection?
+
+If AOV is rising, how much comes from price versus units/mix?
+
+Sources
+
+Every bullet links to original primary source.
+
+Do not generate fake "industry averages" unless peer-range rules are satisfied.
+
+55. Add to brief
+
+From any observation or pattern:
+
+Button:
+
+Add to brief
+
+Brief item stores:
+
+observation IDs
+
+source URLs
+
+operator note
+
+No manual retyping.
+
+56. Coverage page
+
+Route:
+
+/coverage
+
+Show what the corpus actually covers.
+
+Matrix:
+
+Rows:
+companies
+
+Columns:
+
+comp
+
+traffic
+
+ticket
+
+digital
+
+loyalty
+
+locations
+
+margin
+
+Cell:
+
+quarters available
+
+source status
+
+This is a quality-control page, not an executive dashboard.
+
+57. Source page
+
+Route:
+
+/sources/[id]
+
+Show:
+
+document title
+
+company
+
+filing / publication date
+
+period
+
+source type
+
+primary URL
+
+extracted observations
+
+For each observation:
+
+native label
+
+normalized metric
+
+value
+
+evidence text
+
+definition note
+
+validation status
+
+Button:
+
+Open original source
+
+58. Source evidence
+
+Keep evidence concise.
+
+Store the minimum source text needed to support the observation.
+
+Do not store entire copyrighted IR pages unnecessarily in generated output.
+
+Local cache can contain cleaned source for extraction.
+
+Generated corpus should store only:
+
+evidence snippet
+
+source URL
+
+metadata
+
+59. Operator questions layer
+
+The corpus should help a Growth Operator turn peer context into sharper customer questions.
+
+Create deterministic prompts by mechanic.
+
+Ticket-led pattern
+
+Questions:
+
+Is the customer's AOV/ticket increase coming from price, units, or mix?
+
+Is transaction/frequency weakness concentrated in a cohort, channel, or geography?
+
+Does downstream LTV weaken even if topline revenue holds?
+
+Digital outperformance
+
+Questions:
+
+Is digital adding incremental frequency or shifting existing customers?
+
+How does digital cohort LTV compare with offline cohorts?
+
+Are fulfillment economics changing with digital mix?
+
+Loyalty momentum
+
+Questions:
+
+Does frequency change after joining?
+
+How much raw member outperformance existed before enrollment?
+
+Are renewal cohorts structurally different?
+
+These should not use company-private data.
+
+They are operator frameworks.
+
+60. Search parser — simple, deterministic
+
+Do not build an agent.
+
+Parse common search phrases.
+
+Examples:
+
+traffic down ticket up
+
+→ filters:
+
+demand_growth < 0
+ticket_growth > 0
+
+digital > comps
+
+→
+
+digital_growth > comparable_sales_growth
+
+loyalty qsr
+
+→
+
+vertical = qsr
+has loyalty observation
+
+Use text search as fallback.
+
+Optional AI search parsing can be Phase 2.
+
+61. Full-text search
+
+Use Fuse.js or MiniSearch over:
+
+company
+
+native metric
+
+normalized metric
+
+pattern label
+
+evidence text
+
+source title
+
+Corpus size is small enough for client-side search in MVP.
+
+62. UI style
+
+The tool should feel like:
+
+research terminal × operator notebook × source database
+
+Not:
+
+BI dashboard
+
+marketing site
+
+stock terminal
+
+investment research product
+
+Use:
+
+warm white
+
+charcoal
+
+subtle gray borders
+
+compact typography
+
+strong table hierarchy
+
+muted status colors
+
+Avoid:
+
+gradients
+
+glassmorphism
+
+huge KPI cards
+
+generic AI purple
+
+stock-price widgets
+
+unnecessary market-data UI
+
+63. Global navigation
+
+Sidebar:
+
+Research
+
+Search
+
+Companies
+
+Mechanics
+
+Compare
+
+Work
+
+Brief Builder
+
+Corpus
+
+Coverage
+
+Review
+
+Bottom:
+
+Last sync
+
+Settings
+
+64. Top bar
+
+Show:
+
+Corpus synced: [actual timestamp]
+
+Buttons:
+
+Sync
+
+Add official source
+
+If running on deployed read-only site:
+
+Sync button can explain:
+
+Run npm run sync in repository to refresh.
+
+Do not pretend deployed app can persist if it cannot.
+
+65. Optional sync API
+
+For local dev only:
+
+POST /api/sync
+
+Can trigger sync for one company.
+
+Guard:
+
+if (process.env.NODE_ENV === "production") {
+  return 403;
+}
+
+Keep production deployment read-only.
+
+66. Folder structure
+
+app/
+  page.tsx
+  search/page.tsx
+  companies/page.tsx
+  companies/[ticker]/page.tsx
+  mechanics/page.tsx
+  compare/page.tsx
+  brief/page.tsx
+  sources/[id]/page.tsx
+  review/page.tsx
+  coverage/page.tsx
+  settings/page.tsx
+
+components/
+  search/
+  company/
+  mechanics/
+  compare/
+  brief/
+  source/
+  review/
+  ui/
+
+config/
+  companies.ts
+  metrics.ts
+  patterns.ts
+
+data/
+  cache/
+  curation/
+    overrides.json
+  generated/
+
+lib/
+  corpus/
+    repository.ts
+    queries.ts
+    comparability.ts
+  sec/
+    client.ts
+    tickers.ts
+    submissions.ts
+    company-facts.ts
+    filings.ts
+  extract/
+    clean-html.ts
+    tables.ts
+    deterministic.ts
+    optional-llm.ts
+    validate.ts
+  normalize/
+    periods.ts
+    metrics.ts
+    direction.ts
+    adjustments.ts
+  patterns/
+    rules.ts
+    compute.ts
+  brief/
+    generate.ts
+  utils/
+
+scripts/
+  sync.ts
+  sync-company.ts
+  build-index.ts
+  validate-corpus.ts
+  coverage-report.ts
+
+tests/
+  unit/
+  integration/
+  fixtures/
+
+67. Repository interface
+
+UI should not read random JSON directly.
+
+Create:
+
+interface CorpusRepository {
+  getCompanies(): Company[];
+  getCompany(id: string): Company | undefined;
+  getObservations(filter?: ObservationFilter): MetricObservation[];
+  getPatterns(filter?: PatternFilter): GrowthPattern[];
+  getDocuments(filter?: DocumentFilter): SourceDocument[];
+  getCoverage(): CoverageRecord[];
+}
+
+Implement:
+
+StaticCorpusRepository
+
+This makes a DB migration easy later.
+
+68. Company model
+
+interface Company {
+  id: string;
+  ticker: string;
+  cik: string;
+  name: string;
+  vertical:
+    | "grocery"
+    | "grocery_retail"
+    | "qsr"
+    | "retail";
+  tags: string[];
+  active: boolean;
+}
+
+cik is resolved by sync and written to generated company data.
+
+69. Source hierarchy
+
+When duplicate KPI observations exist:
+
+Prefer:
+
+earnings release exhibit / official earnings release,
+
+10-Q / 10-K,
+
+official results landing page.
+
+Do not duplicate the same metric because it appears in multiple documents.
+
+Canonical dedupe key should consider:
+
+company
+metric
+native label
+period
+scope
+adjustment flags
+value
+
+Retain source lineage.
+
+70. Conflicting sources
+
+If two primary sources conflict:
+
+Do NOT silently choose.
+
+Mark:
+
+conflict
+
+Put into review queue.
+
+Show both sources.
+
+71. Monthly sales releases
+
+Some retailers report monthly sales.
+
+Support periodType = month.
+
+Do not mix monthly observations into quarterly peer medians.
+
+Example use:
+
+Costco monthly comparable sales
+
+Keep them searchable.
+
+72. Segments / geography
+
+A single release may contain:
+
+Global
+
+U.S.
+
+North America
+
+International
+
+China
+
+Walmart U.S.
+
+Sam's Club U.S.
+
+Store each separately.
+
+Default company card:
+
+Prefer a configurable primaryOperatingScope.
+
+Examples:
+
+Starbucks: U.S. / North America may be more useful for U.S. GQR comparison
+
+Walmart: Walmart U.S. versus Sam's Club are separate operating segments
+
+Never combine them automatically.
+
+73. Company-specific config
+
+Allow:
+
+interface CompanyConfig {
+  ticker: string;
+  vertical: string;
+  tags: string[];
+  primaryOperatingScopes?: string[];
+  metricAliases?: Record<string, string[]>;
+  irUrls?: string[];
+}
+
+Company-specific aliases are expected.
+
+Do not force every company through the same parser.
+
+74. Research examples validating the corpus design
+
+These are RESEARCH NOTES for developers.
+
+Do not hardcode these values into production data.
+
+The ingestion pipeline should be capable of recovering the same types of facts from live primary sources.
+
+Chipotle
+
+Official IR releases report:
+
+comparable restaurant sales
+
+transaction growth
+
+average check growth
+
+digital sales mix
+
+restaurant openings
+
+Source family:
+
+https://ir.chipotle.com/
+
+This validates the transaction + ticket decomposition.
+
+Starbucks
+
+Official IR releases report:
+
+comparable store sales
+
+comparable transactions
+
+average ticket
+
+store count / openings
+
+regional breakdowns
+
+Source family:
+
+https://investor.starbucks.com/
+
+McDonald's
+
+Official corporate investor materials report:
+
+global comparable sales
+
+loyalty-member systemwide sales
+
+active loyalty-user counts
+
+unit expansion strategy
+
+Source family:
+
+https://corporate.mcdonalds.com/
+
+Walmart / Sam's Club
+
+Official SEC / investor materials report:
+
+comparable sales
+
+transactions
+
+average ticket
+
+unit volumes
+
+eCommerce contribution / growth
+
+membership fee growth
+
+member engagement
+
+Source family:
+
+https://stock.walmart.com/
+
+Kroger
+
+Official IR releases report:
+
+identical sales excluding fuel
+
+eCommerce growth
+
+operating profit
+
+strategic eCommerce commentary
+
+Source:
+
+https://ir.kroger.com/
+
+Albertsons
+
+Official company / SEC releases report:
+
+identical sales
+
+digital sales growth
+
+loyalty-member growth in relevant periods
+
+Source family:
+
+https://www.albertsonscompanies.com/
+
+Costco
+
+Official IR releases report:
+
+comparable sales
+
+ex-gas / FX adjusted comparable sales
+
+eCommerce / digitally-enabled growth
+
+warehouse counts
+
+Important semantic example:
+
+The company has changed digital KPI terminology over time.
+
+The corpus must preserve that definition change.
+
+Source:
+
+https://investor.costco.com/
+
+BJ's Wholesale Club
+
+Official IR releases report:
+
+comparable club sales
+
+ex-gas comparable club sales
+
+digitally enabled comparable sales growth
+
+membership fee income
+
+Source:
+
+https://investors.bjs.com/
+
+Target
+
+Official company earnings material reports:
+
+comparable sales
+
+traffic
+
+digital comparable sales
+
+same-day delivery growth
+
+Source:
+
+https://corporate.target.com/
+
+Ulta Beauty
+
+Official IR releases report:
+
+comparable sales
+
+average ticket
+
+transactions
+
+gross margin
+
+Source:
+
+https://www.ulta.com/investor
+
+75. Parser test cases
+
+Unit tests can use tiny constructed strings.
+
+These are parser fixtures only.
+
+They must NEVER appear in production UI.
+
+Test:
+
+Comparable sales increased 4.2%, driven by a 2.1% increase in transactions and a 2.0% increase in average ticket.
+
+Expected candidates:
+
+comparable sales +4.2
+
+transactions +2.1
+
+average ticket +2.0
+
+Test negative:
+
+Comparable sales decreased 1.0% due to transactions declining 3.0%, partially offset by average ticket increasing 2.0%.
+
+Expected:
+
+comp -1.0
+
+transactions -3.0
+
+ticket +2.0
+
+Test parentheses:
+
+Comparable store sales of (1.0)%.
+
+Expected:
+
+comp -1.0
+
+76. Extraction must not overreach
+
+Example source:
+
+Comparable sales increased 5%.
+
+Do NOT infer:
+
+traffic
+
+ticket
+
+pricing
+
+units
+
+Unless source reports them.
+
+Example:
+
+Revenue rose 10% and 20 locations opened.
+
+Do NOT mathematically claim:
+
+X% of revenue growth came from openings
+
+unless source or reliable calculation supports it.
+
+Pattern may say:
+
+Footprint expansion coincided with topline growth.
+
+77. Management commentary
+
+V1 can store short tagged commentary separately.
+
+interface CommentaryObservation {
+  id: string;
+  companyId: string;
+  periodEnd: string;
+  themes:
+    | "pricing"
+    | "promotion"
+    | "consumer_pressure"
+    | "loyalty"
+    | "digital"
+    | "assortment"
+    | "traffic"
+    | "expansion"
+    | "margin";
+  evidenceText: string;
+  sourceUrl: string;
+  validationStatus: string;
+}
+
+Do not sentiment-score in V1.
+
+Do not make this central.
+
+78. Metric glossary
+
+Every normalized metric in UI has a tooltip.
+
+Example:
+
+Comparable Sales
+
+A company-defined measure of sales growth at eligible existing locations. Eligibility windows and adjustments differ by company.
+
+Transactions / Traffic
+
+Reported change in transaction count, comparable transactions, guest counts, or traffic. Native metric is preserved because these are not always identical.
+
+Average Ticket / Check
+
+Reported change in spend per transaction/check. It can reflect price, product mix, quantity, and other factors; it is not automatically equivalent to price inflation.
+
+This language is important.
+
+79. Growth-operator safeguards
+
+Surface analytical cautions.
+
+If:
+
+ticket up + traffic down
+
+show:
+
+Ticket improvement does not establish healthier customer behavior.
+
+If:
+
+loyalty members strong
+
+show:
+
+Public member growth does not establish incremental loyalty lift.
+
+If:
+
+digital growth strong
+
+show:
+
+Digital outperformance may reflect channel shift as well as incremental demand.
+
+If:
+
+comp positive + locations growing
+
+show:
+
+Separate existing-location performance from footprint-driven growth.
+
+These are generic interpretation guards.
+
+80. Brief Builder safeguards
+
+Do not write:
+
+The industry is shifting toward loyalty
+
+from 3 observations.
+
+Use:
+
+Among the selected companies with disclosed loyalty metrics...
+
+Always show sample size.
+
+Do not present missing disclosure as zero.
+
+81. Source links
+
+All observations must have:
+
+Open primary source
+
+For SEC sources:
+
+link directly to filing/exhibit.
+
+For IR:
+
+link directly to release.
+
+No paywalls needed for core data.
+
+82. Recency
+
+Sync should prioritize new filings.
+
+--recent-only
+
+Check submissions for filings after stored lastSyncedFilingDate.
+
+Do not refetch full archive.
+
+83. Sync metadata
+
+data/generated/sync.json
+
+{
+  startedAt: string;
+  completedAt: string;
+  secUserAgent: string;
+  companiesChecked: number;
+  documentsFetched: number;
+  observationsAdded: number;
+  reviewQueueAdded: number;
+  errors: SyncError[];
+}
+
+Do not expose email from user agent publicly in UI.
+
+84. Error handling
+
+Per-company failure should NOT terminate full sync.
+
+Collect:
+
+CMG ✓
+SBUX ✓
+WMT ✓
+XYZ ✕ source parse failed
+
+At end:
+
+show failures.
+
+Retry failed companies independently.
+
+85. Manual source ingestion
+
+Route or modal:
+
+Add official source
+
+Fields:
+
+company
+
+URL
+
+source type
+
+optional period
+
+Fetch server-side.
+
+Validate hostname against:
+
+sec.gov
+
+configured official domains
+
+If unknown domain:
+
+warn and require manual confirmation.
+
+86. PDF handling
+
+Phase 1:
+
+skip PDFs when equivalent HTML source exists.
+
+If source is PDF-only:
+
+mark:
+
+PDF source not ingested in MVP
+
+Allow source link to be stored.
+
+Phase 2:
+
+add PDF text extraction.
+
+Do not let PDF complexity block the project.
+
+87. Optional automated refresh
+
+Phase 2:
+
+GitHub Action:
+
+schedule:
+  - cron: "0 14 * * 1-5"
+
+Workflow:
+
+npm ci
+
+npm run sync -- --recent-only
+
+npm run validate
+
+if generated corpus changed:
+
+create branch
+
+commit generated data
+
+open PR
+
+Do not auto-merge uncertain extraction.
+
+This produces an auditable corpus.
+
+88. No third-party financial API dependency
+
+Do not use:
+
+Yahoo Finance as source of truth
+
+random finance APIs
+
+scraping Google snippets
+
+analyst estimates
+
+Seeking Alpha
+
+Motley Fool
+
+investor blogs
+
+The core value is source quality.
+
+Use public-company primary sources.
+
+89. Why not earnings transcripts in MVP
+
+Transcripts often have:
+
+licensing constraints
+
+third-party distribution
+
+less structured text
+
+management estimates / qualitative statements
+
+MVP should use:
+
+SEC
+
+official releases
+
+official investor pages
+
+Add official call transcripts only if the company itself publishes them.
+
+90. UI — source-backed by design
+
+Every table row should make provenance visible.
+
+Do not hide source behind a hover-only interaction.
+
+Use a small:
+
+SEC 8-K
+
+or
+
+IR
+
+badge + source link.
+
+91. UI — missing data
+
+Use:
+
+Not reported
+
+not:
+
+—
+
+when important.
+
+Tooltip:
+
+No validated observation found for this company/period.
+
+This matters because non-disclosure ≠ zero.
+
+92. UI — current period
+
+Company page default:
+
+latest fully reported quarter.
+
+Do not use partially reported current quarter.
+
+93. Visualizations
+
+Use few charts.
+
+Good:
+
+quarterly line for one metric
+
+transaction vs ticket scatter
+
+comp / transactions / ticket grouped bars
+
+digital growth trend
+
+location-count trend
+
+Avoid:
+
+pie charts
+
+decorative dashboards
+
+stock charts
+
+market cap
+
+share price
+
+This is a growth mechanics corpus, not investing software.
+
+94. Transaction vs ticket scatter
+
+Mechanics page:
+
+x:
+transaction / traffic growth
+
+y:
+ticket / check growth
+
+Bubble / label:
+company-period
+
+Quadrants:
+
++ traffic / + ticket
+- traffic / + ticket
++ traffic / - ticket
+- traffic / - ticket
+
+Show only observations with sufficiently comparable period/scope.
+
+This is a strong operator visual.
+
+95. Comp bridge view
+
+For companies reporting comp + transaction + ticket:
+
+Show:
+
+Comparable sales
+Transactions / traffic
+Ticket / check
+
+Do NOT claim exact additive bridge because percent interactions / definitions may differ.
+
+Label:
+
+Reported components
+
+not:
+
+Mathematical decomposition
+
+unless source explicitly defines it that way.
+
+96. Export
+
+Allow CSV export of filtered observations.
+
+Columns:
+
+company
+ticker
+vertical
+period_end
+fiscal_period
+normalized_metric
+native_metric
+value
+unit
+scope
+adjustments
+source_type
+source_url
+evidence
+validation_status
+
+This makes it immediately useful beyond the UI.
+
+97. Export brief
+
+Markdown export.
+
+Include source URLs.
+
+This can be pasted into:
+
+internal docs
+
+customer-prep notes
+
+AE notes
+
+product research
+
+98. Settings
+
+Only useful settings:
+
+SEC User-Agent status
+
+Anthropic extraction status
+
+default time window
+
+default vertical
+
+local cache path
+
+No generic admin page.
+
+99. Security
+
+All data is public.
+
+Still:
+
+do not expose secrets client-side
+
+keep Anthropic key server/script only
+
+sanitize fetched HTML
+
+never render raw HTML
+
+validate URLs
+
+limit fetch size
+
+timeout requests
+
+100. Performance
+
+Corpus should be small.
+
+Target:
+
+30–40 companies
+
+8–12 quarters
+
+several thousand metric observations
+
+Static JSON is enough.
+
+Use prebuilt indexes.
+
+Lazy-load evidence/source data if necessary.
+
+101. Testing
+
+Unit tests:
+
+ticker → CIK resolution
+
+SEC URL construction
+
+signed percent parser
+
+fiscal-period normalization
+
+table parsing
+
+comp aliases
+
+adjustment detection
+
+evidence validation
+
+comparability
+
+pattern rules
+
+XBRL dedupe
+
+Integration test:
+
+Using cached test source files only.
+
+CI must not hammer SEC.
+
+102. Live smoke test
+
+Separate manual command:
+
+npm run sync:company -- CMG
+
+Validate:
+
+source found
+
+operating KPI candidate found
+
+evidence linked
+
+corpus validation passes
+
+Then:
+
+npm run sync:company -- SBUX
+npm run sync:company -- WMT
+npm run sync:company -- BJ
+npm run sync:company -- ULTA
+
+This tests different disclosure formats.
+
+103. Build order
+
+Phase 1 — corpus foundation
+
+Next.js shell
+
+company config
+
+SEC ticker mapping
+
+submissions fetch
+
+filing fetch
+
+cache
+
+generated JSON
+
+Phase 2 — deterministic KPI extraction
+
+HTML cleaning
+
+text blocks
+
+table extraction
+
+metric aliases
+
+percent parser
+
+period / scope parser
+
+evidence validator
+
+Phase 3 — core UI
+
+Search
+
+Company
+
+Source
+
+Coverage
+
+Phase 4 — mechanics
+
+patterns
+
+mechanics explorer
+
+compare
+
+transaction/ticket scatter
+
+Phase 5 — team utility
+
+Brief Builder
+
+CSV export
+
+Markdown export
+
+Phase 6 — quality
+
+review queue
+
+definition changes
+
+comparability warnings
+
+corpus validation
+
+Phase 7 — optional AI
+
+structured extraction adapter
+
+strict evidence validation
+
+104. MVP priority if scope must be cut
+
+Do these first:
+
+SEC sync
+
+10–15 companies
+
+comparable sales
+
+transactions / traffic
+
+ticket / check
+
+digital
+
+source evidence
+
+Search
+
+Company page
+
+Pattern explorer
+
+Brief export
+
+Then add:
+
+loyalty
+
+locations
+
+margins
+
+more companies
+
+Do not sacrifice source provenance to expand breadth.
+
+105. Suggested first live company set
+
+For fastest proof, sync these first:
+
+CMG
+SBUX
+WMT
+KR
+COST
+BJ
+MCD
+ULTA
+TGT
+LULU
+
+Why:
+
+They span:
+
+QSR
+
+grocery
+
+club
+
+mass retail
+
+specialty retail
+
+and publicly disclose different useful KPI families.
+
+This is a real source set, not demo metrics.
+
+106. Acceptance criteria
+
+The product is not complete until:
+
+Data
+
+npm run sync fetches real public source documents.
+
+No production KPI is hardcoded.
+
+Every observation has a primary-source URL.
+
+Every auto-validated observation has evidence.
+
+Unknown metrics go to review rather than being invented.
+
+Search
+
+User can answer:
+
+Which QSR periods had transactions down but ticket up?
+
+using real corpus observations.
+
+Company
+
+User can see a company's metric history and native definitions.
+
+Comparison
+
+User sees comparability warnings when definitions differ.
+
+Brief
+
+User can create a source-backed operator brief from selected real observations.
+
+Quality
+
+lint passes
+
+typecheck passes
+
+corpus validation passes
+
+no console errors
+
+no uncited numeric observations in UI
+
+107. Demo story
+
+Use REAL fetched observations.
+
+Do not rehearse with fake Northstar data.
+
+Step 1 — Search
+
+Search:
+
+traffic down ticket up
+
+Explain:
+
+A Growth Operator often needs to know whether a customer's topline pattern is unusual or part of a broader vertical pattern.
+
+Show real reported company-period results.
+
+Step 2 — inspect one company
+
+Open a real QSR.
+
+Show:
+
+comparable sales
+
+transactions
+
+ticket
+
+source
+
+native terminology
+
+Click source.
+
+Step 3 — compare
+
+Compare 3–5 QSRs.
+
+Point out:
+
+The tool does not pretend all metrics are identical. It preserves native definitions and shows comparability.
+
+Step 4 — create brief
+
+Select:
+
+current quarter
+
+QSR
+
+traffic/ticket
+
+digital / loyalty
+
+Export Markdown.
+
+Explain:
+
+This gives an operator or AE a source-backed vertical reference before a customer conversation.
+
+Step 5 — connect to Hilbert
+
+Close with:
+
+Hilbert tells us what is happening inside the customer's data. This corpus gives the operator a fast, source-backed reference for how similar growth mechanics are showing up across the vertical—without confusing peer context with causal evidence.
+
+108. Interview positioning
+
+Do not pitch this as:
+
+I built a better Hilbert.
+
+Pitch:
+
+I tried to avoid duplicating Hilbert's core first-party data and reasoning layer. The Growth Operator role requires unusually deep fluency in grocery, QSR and retail mechanics, so I built a source-backed operating corpus from public filings. It makes traffic, ticket, comps, digital, loyalty and footprint trends searchable across the vertical, while preserving the exact source and metric definition. The goal is to make operators faster at pattern recognition and sharper in customer conversations.
+
+109. What this should prove about the builder
+
+The artifact should demonstrate:
+
+Judgment
+
+You know public operating metrics are not automatically comparable.
+
+Growth fluency
+
+You understand the difference between:
+
+total growth and comparable growth
+
+traffic and ticket
+
+basket and price
+
+digital growth and incremental growth
+
+loyalty scale and incremental loyalty economics
+
+unit expansion and existing-store health
+
+Technical ability
+
+You can:
+
+ingest primary sources
+
+normalize messy data
+
+build deterministic extraction
+
+validate provenance
+
+create a useful internal search tool
+
+Product sense
+
+You built a tool adjacent to Hilbert rather than recreating Hilbert.
+
+Operator orientation
+
+The end output makes customer analysis and customer prep faster.
+
+110. Final instruction to Claude Code
+
+Build this as a working corpus, not a product mockup.
+
+The most important requirement is:
+
+Every number must be real and source-backed.
+
+If an extractor is uncertain:
+
+do not guess.
+
+Put it in review.
+
+If definitions differ:
+
+do not hide the difference.
+
+Show it.
+
+If the corpus is empty:
+
+show an empty state.
+
+Then make the sync pipeline work.
+
+The product's value is trust.
+
+A smaller corpus of 10 companies with rigorous provenance is better than a beautiful UI containing 100 unreliable companies.
+
+Start with source ingestion and data quality.
+
+Only then build the interface.

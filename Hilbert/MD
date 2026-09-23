@@ -1,0 +1,3821 @@
+CLAUDE.md — Hilbert Grocery / QSR / Retail Growth Operator Workbench
+
+0. Objective
+
+Build a polished, interview-ready product artifact for Hilbert's Growth Operator — Grocery, QSR & Retail role.
+
+This is NOT a generic executive dashboard.
+
+It is an operator workbench for someone who:
+
+runs Hilbert against real customer datasets,
+
+interrogates cohorts, basket dynamics, visit frequency, channel performance, loyalty, and promotions,
+
+checks whether Hilbert's reasoning is actually correct,
+
+distinguishes real behavior change from artifacts,
+
+translates the result into a clear growth narrative,
+
+recommends a concrete action,
+
+captures product feedback when Hilbert gets something wrong or misses an important nuance.
+
+The build should demonstrate:
+
+analytical chops
+
+structured thinking
+
+customer judgment
+
+B2C growth fluency
+
+comfort working alongside AI
+
+willingness to challenge AI outputs
+
+ability to turn messy evidence into an actionable customer story
+
+The product should feel like something an early Hilbert operator would actually use with a Head of Grocery / QSR / Retail.
+
+1. Product thesis
+
+Hilbert is not primarily a dashboard.
+
+Hilbert is a data-science-first B2C growth engine designed to turn fragmented customer data into predictive clarity and action.
+
+Its public product framing centers on four layers:
+
+Detect → Reason → Act → Optimize
+
+The operator's job is not simply to accept the AI answer.
+
+The operator must be able to ask:
+
+Is the signal real?
+
+What changed beneath the aggregate metric?
+
+Is this a cohort effect, mix shift, pricing artifact, promotion artifact, operational issue, or data-quality problem?
+
+Which customer behavior actually drives the top line?
+
+How large is the economic impact?
+
+What action would change behavior rather than merely move a KPI?
+
+What did Hilbert miss?
+
+The UI must embody this mindset.
+
+2. Role-specific design principle
+
+Build for investigation, not passive monitoring.
+
+A conventional dashboard says:
+
+Revenue +4.8%
+
+This workbench should say:
+
+Revenue is +4.8%, but unit volume is -6.1%. Nearly all topline growth came from a 9.7% increase in effective price. New-customer 30-day repeat declined 7.4 percentage points, concentrated among promotion-acquired cohorts. The growth is therefore not behaving like durable cohort improvement.
+
+Then allow the operator to inspect the evidence.
+
+Every important finding should have:
+
+observation
+
+economic impact
+
+hypothesis
+
+evidence
+
+counter-evidence
+
+confidence
+
+alternative explanations
+
+validation query
+
+recommended action
+
+customer-facing narrative
+
+Hilbert product feedback
+
+3. Fictional demo customer
+
+Use a fictional grocery customer.
+
+Company:
+
+Northstar Market
+
+Label clearly:
+
+Synthetic demo customer
+
+Business profile:
+
+omnichannel grocery delivery + physical retail
+
+major presence in NYC
+
+1.7M known customers
+
+42 stores / fulfillment locations
+
+web + mobile
+
+loyalty membership
+
+paid acquisition
+
+promotional offers
+
+thousands of SKUs
+
+category / assortment data
+
+customer-level transactions
+
+delivery zone data
+
+lifecycle marketing data
+
+Do NOT imply any synthetic Northstar values belong to a real Hilbert customer.
+
+The product may include two additional inactive account-switcher examples:
+
+Juniper Coffee — QSR
+
+Field & Finch — specialty retail
+
+But the actual demo should focus deeply on Northstar Market.
+
+Depth is more important than breadth.
+
+4. Primary persona
+
+User:
+
+Amy — Growth Operator
+
+Reports to:
+
+Head of Grocery, QSR & Retail
+
+Works with:
+
+customer VP Growth
+
+customer Strategy & Analytics
+
+customer Marketing
+
+customer Merchandising
+
+Hilbert Product
+
+Hilbert Engineering
+
+Hilbert Account Executive
+
+Primary daily workflow:
+
+Open customer workspace.
+
+Review new Hilbert detections.
+
+Pick one material issue.
+
+Inspect cohort / basket / frequency / channel evidence.
+
+test alternative explanations.
+
+run or inspect SQL.
+
+decide whether Hilbert's conclusion is valid.
+
+quantify economic impact.
+
+create customer narrative.
+
+recommend action.
+
+capture feedback for Hilbert Product.
+
+revisit result later.
+
+5. Core demo case
+
+The entire prototype should revolve around one realistic investigation.
+
+Detection
+
+New-customer revenue is up, but the newest paid cohorts are becoming less valuable.
+
+Surface-level metrics:
+
+New-customer revenue: +11.8%
+
+New-customer AOV: +8.9%
+
+New customers: +3.1%
+
+At first glance, acquisition looks healthy.
+
+Hilbert detects:
+
+30-day second-purchase rate: -7.4 pp
+
+60-day order frequency: -12.1%
+
+predicted 180-day LTV: -9.6%
+
+paid social concentration among the weak cohorts
+
+average first-order discount increased from 13.2% to 21.7%
+
+effective item prices increased in several high-volume categories
+
+Estimated impact:
+
+$1.18M 180-day revenue at risk
+
+The operator must determine:
+
+Competing explanations
+
+H1. Real cohort deterioration
+New paid customers are genuinely lower intent.
+
+H2. Pricing artifact
+AOV rose because prices rose, making revenue look healthier while unit demand weakened.
+
+H3. Promotion artifact
+Aggressive first-order offers pulled demand forward or acquired promotion-dependent customers.
+
+H4. Channel mix shift
+More spend moved into broad paid-social audiences with weaker downstream quality.
+
+H5. Operational artifact
+Delivery availability / fulfillment quality reduced repeat behavior.
+
+H6. Data artifact
+Tracking or identity changes made newer cohorts look worse than they are.
+
+The workbench should lead the operator through these hypotheses.
+
+Final conclusion:
+
+The decline is real, but it is not a single-factor story. Roughly half of the LTV deterioration is associated with lower-quality paid-social mix, while deeper first-order promotions explain another meaningful share. Pricing explains most of the AOV increase but does not explain the decline in repeat behavior. Delivery quality and identity resolution are stable enough to rule out as primary drivers.
+
+Recommended action:
+
+reduce spend in the bottom-quartile paid-social campaigns,
+
+stop blanket >20% first-order discounts for low-intent audiences,
+
+preserve offers for cohorts with high predicted repeat propensity,
+
+monitor second-purchase conversion as the leading indicator.
+
+This one investigation should touch almost every page.
+
+6. Secondary use cases
+
+Seed the workspace with additional findings so it feels real.
+
+Win-back
+
+Dormant high-value households are reactivating too late
+
+84K customers
+
+historically high basket value
+
+45–90 days beyond expected cadence
+
+expected recoverable revenue: $420K
+
+suggested intervention: personalized win-back before 120-day decay
+
+Loyalty
+
+Members are compounding frequency faster than non-members
+
+member monthly frequency: 3.2
+
+non-member: 2.1
+
+member retention advantage: +14.6 pp
+
+opportunity: target high-frequency non-members for membership conversion
+
+Assortment
+
+Prepared foods increase basket frequency among high-value urban customers
+
+attach-rate increase: +18%
+
+frequency lift among exposed cohort: +9.4%
+
+investigate whether assortment access or customer mix explains the difference
+
+Paid reallocation
+
+Branded search CAC rose without incremental LTV
+
+CAC: +16%
+
+pLTV: flat
+
+estimated monthly overspend: $96K
+
+Promotion
+
+Blanket discounting is leaking margin into one-time buyers
+
+17,842 first-time purchasers
+
+no repeat purchase after 90+ days
+
+promotional cost: $612K
+
+potential annual recoverable value: $330K
+
+7. Pages
+
+Build these routes:
+
+/
+ /customer
+ /investigations
+ /investigations/new-cohort-quality
+ /cohorts
+ /basket-frequency
+ /promotions
+ /channels
+ /sql-lab
+ /customer-readout
+ /product-feedback
+ /decision-log
+ /data-health
+
+The application should have 10–12 high-quality pages, but the central workflow matters more than raw page count.
+
+8. Global navigation
+
+Persistent left sidebar.
+
+Top:
+
+Hilbert wordmark
+
+workspace: Northstar Market
+
+badge: Synthetic demo
+
+Sections:
+
+Customer
+
+Operator Home
+
+Customer Overview
+
+Analyze
+
+Investigations
+
+Cohorts
+
+Basket & Frequency
+
+Promotions
+
+Channels
+
+SQL Lab
+
+Deliver
+
+Customer Readout
+
+Product Feedback
+
+Decision Log
+
+System
+
+Data Health
+
+Bottom:
+
+user: Amy
+
+role: Growth Operator
+
+Do not use excessive iconography.
+
+Use Lucide icons sparingly.
+
+9. Page 1 — Operator Home
+
+Route:
+
+/
+
+Purpose:
+
+Answer:
+
+What should I investigate, validate, and communicate today?
+
+This should feel like an operator queue, not an executive KPI wall.
+
+Header
+
+Title:
+
+Northstar Market
+
+Subtitle:
+
+Growth operator workspace · Updated 11 min ago
+
+Right:
+
+Last 90 days
+
+All geographies
+
+All channels
+
+Ask Hilbert
+
+Cmd/Ctrl K
+
+Section A — Today's operator brief
+
+Heading:
+
+4 findings need judgment
+
+Body:
+
+Topline remains healthy, but Hilbert detected a material deterioration in the newest paid-acquisition cohorts. AOV is masking weaker repeat behavior. Two additional opportunities are ready for validation, and one product-feedback item remains unresolved.
+
+Show four compact metrics:
+
+Revenue at risk: $1.18M
+
+Validated upside: $750K
+
+Open investigations: 4
+
+Product feedback: 2 open
+
+Section B — Investigation queue
+
+This is the dominant module.
+
+Columns:
+
+finding
+
+why it matters
+
+economic impact
+
+confidence
+
+validation status
+
+next step
+
+Rows:
+
+New paid cohorts show weaker repeat economics
+
+Promotion leakage among one-time buyers
+
+Loyalty membership frequency advantage
+
+Prepared-food assortment opportunity
+
+Branded search efficiency decline
+
+Statuses:
+
+Needs validation
+
+Validated
+
+Confounded
+
+Waiting for data
+
+Ready for customer
+
+Use exact language.
+
+CTA:
+
+Open investigation
+
+Section C — Customer moments
+
+Show three upcoming or recent moments:
+
+Weekly growth review — Tomorrow 10:00 AM
+
+Paid acquisition deep dive — Friday
+
+Monthly executive readout — Aug 28
+
+Each shows:
+
+what needs to be ready
+
+outstanding analysis
+
+owner
+
+No calendar integration needed.
+
+Section D — Hilbert reasoning checks
+
+Show cases where operator scrutiny is needed:
+
+Example:
+
+Hilbert attributes 61% of retention decline to paid-social mix.
+
+Operator note:
+
+Needs sensitivity test: campaign mix changed at the same time as first-order discount depth.
+
+CTA:
+
+Test reasoning
+
+Another:
+
+Hilbert flags prepared foods as causal driver of frequency.
+
+Operator note:
+
+Possible selection effect: high-frequency households may self-select into prepared foods.
+
+CTA:
+
+Validate
+
+This is critical.
+
+It shows the operator does not blindly trust AI.
+
+10. Page 2 — Customer Overview
+
+Route:
+
+/customer
+
+Purpose:
+
+Provide the commercial context needed before analysis.
+
+Do not make this a generic KPI dashboard.
+
+A. Business model card
+
+Show:
+
+Omnichannel grocery
+
+1.7M customers
+
+NYC core market
+
+42 locations
+
+Membership program
+
+Paid + organic acquisition
+
+High promotional intensity
+
+High-frequency purchase behavior
+
+B. Growth equation
+
+Use a clean formula:
+
+Revenue =
+Active Customers
+× Purchase Frequency
+× Average Basket Value
+
+Then expand:
+
+Active Customers =
+New Customers + Retained Customers + Reactivated Customers
+
+Allow user to click each lever.
+
+C. Current economics
+
+Metrics:
+
+Active customers: 648K
+
+Monthly revenue: $46.2M
+
+Orders: 1.08M
+
+AOV: $42.78
+
+Orders / active customer: 1.67
+
+90-day repeat: 41.6%
+
+Blended CAC: $28.40
+
+p180 LTV: $164
+
+Loyalty penetration: 31.8%
+
+Promo share of orders: 37.4%
+
+D. Revenue bridge
+
+Show change vs prior period.
+
+Example:
+
++$3.4M revenue
+
+Drivers:
+
++$4.1M pricing / basket value
+
++$1.2M acquisition volume
+
+-$1.1M repeat-frequency deterioration
+
+-$0.8M inactive-customer growth
+
+This is important because it introduces the price-vs-behavior distinction.
+
+E. Customer questions
+
+Show current customer priorities:
+
+Are our newest customers lower quality?
+
+Are promotions creating incremental behavior?
+
+Which loyalty behaviors truly compound?
+
+Where should paid budget move?
+
+Which assortment changes increase repeat visits?
+
+These drive the investigation queue.
+
+11. Page 3 — Investigations
+
+Route:
+
+/investigations
+
+Purpose:
+
+A structured list of growth questions.
+
+Not “alerts.”
+
+Each investigation is an analytical case.
+
+Columns:
+
+Question
+
+Trigger
+
+Hypotheses
+
+Impact
+
+Confidence
+
+Operator status
+
+Customer status
+
+Updated
+
+Example row:
+
+Question:
+Why are new paid cohorts repeating less?
+
+Trigger:
+30-day repeat -7.4 pp
+
+Hypotheses:
+Channel mix · Promotion · Pricing · Ops
+
+Impact:
+$1.18M at risk
+
+Hilbert confidence:
+88%
+
+Operator status:
+Testing
+
+Customer status:
+Not shared
+
+Click through.
+
+Filters:
+
+Acquisition
+
+Retention
+
+Basket
+
+Loyalty
+
+Promotions
+
+Assortment
+
+Channel
+
+Pricing
+
+Operator status:
+
+New
+
+Testing
+
+Validated
+
+Rejected
+
+Waiting for data
+
+Ready for customer
+
+Closed
+
+12. Page 4 — Investigation Detail
+
+Route:
+
+/investigations/new-cohort-quality
+
+This is the centerpiece of the project.
+
+The interviewer should be able to spend 10 minutes here.
+
+Header
+
+Breadcrumb:
+
+Northstar / Investigations / New cohort quality
+
+Title:
+
+Why are new paid cohorts repeating less?
+
+Subhead:
+
+Hilbert detected a divergence between topline acquisition metrics and downstream customer value.
+
+Badges:
+
+High impact
+
+Testing
+
+88% Hilbert confidence
+
+Top metrics:
+
+New-customer revenue: +11.8%
+
+30-day repeat: -7.4 pp
+
+60-day frequency: -12.1%
+
+p180 LTV: -9.6%
+
+Revenue at risk: $1.18M
+
+Section A — Hilbert's current answer
+
+Label explicitly:
+
+Hilbert hypothesis
+
+New paid cohorts are lower quality primarily because acquisition shifted toward broad paid-social audiences with weaker repeat propensity. Deeper first-order discounts appear to amplify the effect.
+
+Show:
+
+confidence: 88%
+
+primary driver: channel mix
+
+secondary driver: promotion depth
+
+leading indicator: 14-day engagement / second-purchase intent
+
+Then:
+
+Operator status: Testing
+
+Operator note:
+
+Channel and promotional mix changed simultaneously. Need to separate the effects before presenting this as causal.
+
+This wording should make the human-AI relationship visible.
+
+Section B — Investigation canvas
+
+Build a horizontal flow:
+
+Observation
+→ Competing hypotheses
+→ Evidence
+→ Tests
+→ Conclusion
+→ Action
+
+The active step should be Tests.
+
+Clickable.
+
+Section C — Competing hypotheses
+
+Show six cards.
+
+H1 — Lower-intent acquisition mix
+
+Status: Supported
+
+Evidence:
+
+broad social share rose 14 pp
+
+these users show lower day-14 engagement
+
+within comparable discount depth, repeat remains weaker
+
+H2 — Promotion artifact
+
+Status: Partially supported
+
+Evidence:
+
+first-order discount rose from 13.2% to 21.7%
+
+deep-discount cohorts repeat less
+
+channel-adjusted effect remains meaningful
+
+H3 — Pricing artifact
+
+Status: Explains AOV, not repeat decline
+
+Evidence:
+
+effective prices increased 7.6%
+
+unit count / basket fell
+
+repeat deterioration persists after price-normalized analysis
+
+H4 — Fulfillment deterioration
+
+Status: Mostly ruled out
+
+Evidence:
+
+on-time delivery stable
+
+cancellation rate stable
+
+affected and unaffected cohorts show similar service levels
+
+H5 — Seasonal change
+
+Status: Ruled out
+
+Evidence:
+
+prior-year cohorts do not show similar deterioration
+
+divergence exceeds historical seasonal band
+
+H6 — Data / identity issue
+
+Status: Ruled out
+
+Evidence:
+
+match rate stable
+
+event completeness 98.8%
+
+no schema change coincides with divergence
+
+Each card has:
+
+View evidence
+
+Section D — Cohort evidence
+
+Main chart:
+
+30-day second-purchase rate by acquisition cohort
+
+Cohorts:
+
+Jan
+
+Feb
+
+Mar
+
+Apr
+
+May
+
+Jun
+
+Jul
+
+Split:
+
+Paid social
+
+Paid search
+
+Organic
+
+Referral
+
+Highlight May–July deterioration in paid social.
+
+Show prior-year range as faint benchmark if possible.
+
+Below:
+
+What changed
+
+paid-social new users: +24%
+
+paid-social 30-day repeat: -9.8 pp
+
+other channels: -1.2 pp
+
+gap remains after city and first-order basket controls
+
+Section E — Price normalization
+
+Title:
+
+Is higher AOV hiding weaker behavior?
+
+Show two charts side by side.
+
+Chart 1:
+Nominal new-customer revenue
+
+Chart 2:
+Price-normalized units / customer
+
+Narrative:
+
+Nominal revenue increased, but units purchased per customer declined. Price explains most of the AOV increase and makes acquisition performance look healthier than underlying behavior.
+
+Metrics:
+
+AOV: +8.9%
+
+effective price index: +7.6%
+
+units / first order: -3.8%
+
+60-day units / customer: -10.7%
+
+Conclusion badge:
+
+Pricing artifact present
+
+But:
+
+Does not explain repeat decline
+
+Section F — Promotion analysis
+
+Title:
+
+Did deeper discounts create low-quality acquisition?
+
+Scatter plot:
+
+x:
+first-order discount %
+
+y:
+90-day repeat %
+
+bubble size:
+customers
+
+color grouping:
+channel
+
+Show:
+
+0–10%
+
+10–20%
+
+20–30%
+
+30%+
+
+Metrics:
+
+discount depth: +8.5 pp
+
+
+
+20% discount cohort repeat: 28.4%
+
+≤10% cohort repeat: 43.9%
+
+Important note:
+
+This is observational. Promotion depth is correlated with channel and campaign targeting.
+
+Button:
+
+Run matched-cohort test
+
+When clicked, show result:
+
+Matched-cohort result
+
+After matching on:
+
+acquisition channel
+
+first-order category
+
+geography
+
+first-order basket
+
+acquisition week
+
+Estimated repeat gap:
+
+-5.1 pp
+
+Confidence interval:
+[-6.2, -4.0]
+
+Label:
+
+Strong evidence of promotion-dependent behavior
+
+Do not claim randomized causality.
+
+Section G — Channel mix
+
+Title:
+
+Which channels drove the quality shift?
+
+Table:
+
+| Channel | New Users | Mix Δ | CAC | 30D Repeat | p180 LTV | LTV |
+| Meta Broad | 92K | +11.4 pp | $32 | 25.1% | $118 | 3.7x |
+| Meta Lookalike | 41K | +2.8 pp | $37 | 36.4% | $167 | 4.5x |
+| Google Nonbrand | 38K | -1.9 pp | $34 | 34.2% | $154 | 4.5x |
+| Google Brand | 27K | +0.7 pp | $29 | 39.8% | $161 | 5.6x |
+| Organic | 61K | -8.1 pp | $0 | 44.6% | $181 | — |
+
+Highlight Meta Broad.
+
+CTA:
+
+Open Channels
+
+Section H — Driver decomposition
+
+Use a stacked contribution bar.
+
+Estimated contribution to p180 LTV deterioration:
+
+acquisition mix: 51%
+
+promotion depth: 27%
+
+category / basket mix: 9%
+
+geography: 4%
+
+unexplained: 9%
+
+Add tooltip:
+
+Contribution is a modeled decomposition, not proof of causal effect.
+
+This is important.
+
+Section I — Validation checklist
+
+Show operator-owned checks:
+
+Compare against prior-year seasonality
+
+Normalize for price changes
+
+Check fulfillment metrics
+
+Check identity / tracking quality
+
+Segment by acquisition channel
+
+Control for first-order promotion depth
+
+Inspect category mix
+
+Validate campaign-level spend changes with customer
+
+Confirm promotion policy change date
+
+Progress:
+
+7 / 9 checks complete
+
+Section J — SQL evidence
+
+Show two SQL cards.
+
+Query 1 — cohort repeat
+
+WITH first_orders AS (
+  SELECT
+    customer_id,
+    MIN(order_date) AS first_order_date
+  FROM orders
+  GROUP BY 1
+),
+cohorts AS (
+  SELECT
+    f.customer_id,
+    DATE_TRUNC('month', f.first_order_date) AS cohort_month,
+    a.acquisition_channel,
+    f.first_order_date
+  FROM first_orders f
+  LEFT JOIN acquisition a USING (customer_id)
+)
+SELECT
+  cohort_month,
+  acquisition_channel,
+  COUNT(DISTINCT customer_id) AS customers,
+  AVG(
+    CASE WHEN second_order_date <= first_order_date + INTERVAL '30 day'
+    THEN 1 ELSE 0 END
+  ) AS repeat_30d
+FROM cohort_features
+GROUP BY 1, 2
+ORDER BY 1, 2;
+
+Query 2 — promotion depth
+
+Show a realistic query comparing first-order discount depth with downstream repeat.
+
+Buttons:
+
+Open in SQL Lab
+
+Copy query
+
+The SQL does not need a real database connection.
+It should power deterministic local mock results.
+
+Section K — Operator conclusion
+
+Use a prominent but restrained section.
+
+Heading:
+
+Current conclusion
+
+The newest paid cohorts are genuinely weaker, and the deterioration is concentrated in broad paid-social acquisition. Higher prices explain most of the apparent AOV strength but not the decline in repeat behavior. Deeper first-order promotions are associated with additional weakness after controlling for channel and basket characteristics. Fulfillment and data quality do not appear to be primary causes.
+
+Confidence:
+
+High
+
+Economic impact:
+
+$1.18M 180-day revenue at risk
+
+Unknowns:
+
+exact campaign-level targeting change
+
+whether discount strategy was intentionally broadened
+
+creative mix change not yet included
+
+Section L — Action options
+
+Create three.
+
+1. Reallocate low-quality paid spend
+
+Recommended.
+
+move 12% of Meta Broad spend into Lookalike + high-pLTV audiences
+
+expected p180 revenue recovery: +$610K
+
+time to signal: 30–45 days
+
+risk: medium
+
+2. Replace blanket first-order discounting
+
+keep deeper offers only for high predicted repeat propensity / price-sensitive segments
+
+expected margin + LTV improvement: +$360K
+
+time to signal: 45–60 days
+
+risk: medium
+
+3. Build second-purchase intervention
+
+trigger 7–14 days after first order for high-value non-repeaters
+
+expected recovered revenue: +$210K
+
+time to signal: 21–30 days
+
+risk: low
+
+Buttons:
+
+Add to customer readout
+
+Create follow-up
+
+Send to Decision Log
+
+Section M — Challenge Hilbert
+
+This is a unique section.
+
+Title:
+
+Where Hilbert may still be wrong
+
+Rows:
+
+Campaign creative is not represented in current model
+
+Matched promotion analysis remains observational
+
+Competitor pricing is not included
+
+Household identity may undercount cross-device behavior by ~1.2%
+
+For each:
+
+potential impact
+
+whether it changes recommendation
+
+follow-up required
+
+This section is a major differentiator.
+
+13. Page 5 — Cohorts
+
+Route:
+
+/cohorts
+
+Purpose:
+
+Deep cohort diagnostics.
+
+Filters:
+
+first purchase month
+
+acquisition channel
+
+geography
+
+loyalty status
+
+first-order discount
+
+first-order category
+
+device
+
+delivery type
+
+Views:
+
+Retention heatmap
+
+Rows:
+monthly acquisition cohort
+
+Columns:
+week / month since acquisition
+
+Cell:
+repeat rate
+
+Cohort economics
+
+Metrics:
+
+customers
+
+CAC
+
+first-order revenue
+
+day-30 repeat
+
+day-60 repeat
+
+p180 LTV
+
+contribution margin
+
+payback
+
+Cohort curve
+
+Overlay selected cohorts.
+
+Decomposition
+
+Show why one cohort differs from another.
+
+Example:
+
+July Meta Broad vs March Meta Broad
+
+Differences:
+
+first-order discount +9.1 pp
+
+organic-product mix -6.4 pp
+
+app activation -11.8 pp
+
+units / first order -4.2%
+
+delivery performance +0.3 pp
+
+Add:
+
+Ask Hilbert why these cohorts diverged
+
+Script answer.
+
+14. Page 6 — Basket & Frequency
+
+Route:
+
+/basket-frequency
+
+Purpose:
+
+Show grocery/QSR/retail-specific depth.
+
+Header:
+
+Basket & Frequency
+
+Subtitle:
+
+Separate higher ticket from healthier customer behavior.
+
+A. Growth decomposition
+
+Formula:
+
+Revenue / Customer =
+Visits / Customer × Basket Value
+
+Then:
+
+Basket Value =
+Units / Basket × Effective Price / Unit
+
+This makes the artifact analytically serious.
+
+B. Frequency trend
+
+Show:
+
+visits / active household / month
+
+by loyalty
+
+by market
+
+by acquisition cohort
+
+C. Basket composition
+
+Show:
+
+basket value
+
+items per basket
+
+effective price per item
+
+category breadth
+
+private-label share
+
+promoted-item share
+
+D. Frequency vs basket matrix
+
+Quadrants:
+
+High frequency / high basket — Protect
+
+High frequency / low basket — Grow basket
+
+Low frequency / high basket — Increase cadence
+
+Low frequency / low basket — Low priority
+
+E. Category attach analysis
+
+Table:
+
+category
+
+penetration
+
+attach rate
+
+frequency lift
+
+margin
+
+repeat association
+
+confidence
+
+Seed:
+
+prepared foods
+
+fresh produce
+
+beverages
+
+household
+
+bakery
+
+dairy
+
+snacks
+
+Highlight:
+
+Prepared foods
+
+But include a warning:
+
+Association may reflect customer self-selection.
+
+CTA:
+
+Create validation investigation
+
+15. Page 7 — Promotions
+
+Route:
+
+/promotions
+
+Purpose:
+
+Evaluate true promotional lift, not coupon redemption.
+
+Top question
+
+Which promotions change future behavior?
+
+Metrics:
+
+promo spend: $3.8M
+
+orders with promo: 37.4%
+
+incremental revenue estimate: $2.6M
+
+one-time-buyer promo leakage: $612K
+
+Promotion table
+
+Columns:
+
+offer
+
+customers
+
+redemption
+
+incremental conversion
+
+30D repeat
+
+incremental margin
+
+p180 LTV
+
+likely incrementality
+
+status
+
+Examples:
+
+20% first order
+
+$15 off $75
+
+Free delivery
+
+Loyalty 2× points
+
+Prepared foods bundle
+
+Win-back $10 credit
+
+Do not equate redemption with lift.
+
+Incrementality view
+
+For selected offer:
+
+Show:
+
+Observed:
++18% conversion
+
+Matched baseline:
++7% estimated incrementality
+
+Downstream:
+-5.1 pp repeat
+
+Net 180-day contribution:
+-$4.80 / acquired customer
+
+Conclusion:
+
+Good acquisition metric; weak customer economics
+
+This is exactly the kind of distinction the role needs.
+
+16. Page 8 — Channels
+
+Route:
+
+/channels
+
+Purpose:
+
+Connect paid acquisition to downstream economics.
+
+Do not optimize on CAC alone.
+
+Table:
+
+Channel
+
+Spend
+
+Customers
+
+CAC
+
+First-order ROAS
+
+30D repeat
+
+p180 LTV
+
+LTV
+
+contribution after promos
+
+quality trend
+
+Add toggle:
+
+Acquisition view
+vs
+Customer economics view
+
+Show how ranking changes.
+
+Example:
+
+Meta Broad:
+
+first-order ROAS looks strong
+
+p180 economics deteriorate
+
+Referral:
+
+low volume
+
+strongest LTV
+
+Add:
+
+Budget reallocation simulator
+
+User changes channel spend +/-.
+
+Update:
+
+expected new customers
+
+blended CAC
+
+predicted p180 LTV
+
+total contribution
+
+uncertainty
+
+No black-box precision.
+Use ranges.
+
+17. Page 9 — SQL Lab
+
+Route:
+
+/sql-lab
+
+This is essential for the job artifact.
+
+Purpose:
+
+Show that the operator can go beneath Hilbert's answer.
+
+Layout:
+
+Left:
+query editor
+
+Right:
+result table / chart
+
+Top:
+saved analyses
+
+Seed saved queries:
+
+30D repeat by acquisition cohort
+
+First-order promo depth vs 90D behavior
+
+Visit frequency by loyalty tenure
+
+Price-normalized basket trend
+
+Win-back eligible high-LTV households
+
+Channel p180 LTV:CAC
+
+Prepared-food attach rate
+
+Delivery SLA vs repeat
+
+Use Monaco Editor if easy.
+Otherwise a clean code editor textarea.
+
+Query behavior
+
+The app does not need a SQL engine.
+
+Recognize the seeded queries and return deterministic mock result sets.
+
+Buttons:
+
+Run
+
+Save
+
+Add result to investigation
+
+Add chart to readout
+
+Show:
+
+Query completed in 1.4s · 18,342 rows scanned
+
+Synthetic.
+
+SQL quality
+
+Queries should be realistic:
+
+CTEs
+
+cohort windows
+
+joins
+
+conditional aggregation
+
+percentiles if appropriate
+
+no absurd schema complexity
+
+Data tables:
+
+customers
+
+orders
+
+order_items
+
+acquisition
+
+promotions
+
+loyalty
+
+fulfillment_events
+
+product_catalog
+
+sessions
+
+Add a schema explorer.
+
+18. Page 10 — Customer Readout
+
+Route:
+
+/customer-readout
+
+Purpose:
+
+Turn analysis into a clear customer growth narrative.
+
+This page should directly reflect the JD requirement to support AEs and present findings.
+
+Header:
+
+Weekly Growth Readout
+
+Northstar Market · Aug 15, 2026
+
+Sections:
+
+1. What changed
+
+3 bullets max.
+
+Example:
+
+New-customer revenue grew 11.8%, but 30-day repeat fell 7.4 pp.
+
+The deterioration is concentrated in broad paid social.
+
+Higher prices explain most AOV growth; they do not explain weaker repeat behavior.
+
+2. Why it matters
+
+$1.18M estimated 180-day revenue at risk
+
+3. What we believe
+
+Show conclusion + confidence.
+
+4. What we ruled out
+
+fulfillment deterioration
+
+seasonality
+
+identity tracking
+
+5. What we recommend
+
+Three actions.
+
+6. What we need from Northstar
+
+confirm May campaign targeting changes
+
+confirm first-order promotion policy
+
+provide creative metadata if available
+
+7. Next measurement
+
+14-day activation
+
+second-purchase conversion
+
+p180 LTV
+
+contribution margin
+
+Use an Executive / Analytical appendix toggle.
+
+Executive view
+
+Very concise.
+
+Analytical appendix
+
+Includes:
+
+cohort chart
+
+promo analysis
+
+channel table
+
+assumptions
+
+Buttons:
+
+Present mode
+
+Export summary
+
+Copy talking points
+
+Export can be mocked.
+
+19. Page 11 — Product Feedback
+
+Route:
+
+/product-feedback
+
+Purpose:
+
+Capture where Hilbert's product reasoning needs improvement.
+
+This is directly tied to the role.
+
+Top metrics:
+
+Open feedback: 6
+
+High priority: 2
+
+Accepted: 4
+
+Shipped: 3
+
+Table:
+
+Issue
+
+Customer
+
+Hilbert output
+
+Operator finding
+
+Type
+
+Severity
+
+Reproducible
+
+Status
+
+Seed examples:
+
+1. Promotion and channel mix confounding
+
+Hilbert output:
+61% of retention decline attributed to channel mix
+
+Operator finding:
+Promotion depth changed simultaneously; attribution is overstated without controlling for offer depth.
+
+Type:
+Reasoning
+
+Severity:
+High
+
+Recommended product input:
+Include promo depth in root-cause decomposition when acquisition and offer policies move together.
+
+2. Price-driven AOV misread as basket improvement
+
+Hilbert output:
+Basket quality improved 8.9%
+
+Operator finding:
+Effective price rose 7.6%; units per basket declined.
+
+Type:
+Metric semantics
+
+Severity:
+High
+
+Recommended product input:
+Always decompose AOV into price × units where item-level price data exists.
+
+3. Prepared-food frequency opportunity may be selection bias
+
+Type:
+Causal reasoning
+
+Status:
+Needs validation
+
+4. Loyalty renewal interpretation
+
+Type:
+Segment definition
+
+5. Household identity edge case
+
+Type:
+Data quality
+
+Feedback detail drawer
+
+Fields:
+
+observed output
+
+expected behavior
+
+business consequence
+
+reproducible steps
+
+relevant query
+
+screenshot placeholder
+
+recommended fix
+
+affected customers
+
+urgency
+
+CTA:
+
+Mark ready for Product
+
+20. Page 12 — Decision Log
+
+Route:
+
+/decision-log
+
+Purpose:
+
+Track what was learned and what happened after action.
+
+Each chain:
+
+Finding
+→ Judgment
+→ Action
+→ Result
+→ Learning
+
+Example:
+
+Finding
+
+New Meta Broad cohorts had weaker 30-day repeat.
+
+Judgment
+
+Channel mix and promotion depth were both contributors.
+
+Action
+
+Reduced broad-audience budget 12%; constrained >20% offers.
+
+Result
+
+After 45 days:
+
+30-day repeat +4.6 pp
+
+blended CAC +2.1%
+
+p180 LTV +7.9%
+
+contribution +$290K
+
+Learning
+
+Optimizing downstream quality produced better economics despite slightly higher CAC.
+
+This is more meaningful than simply saying an action “worked.”
+
+21. Data Health
+
+Route:
+
+/data-health
+
+Purpose:
+
+Help the operator distinguish business signal from data artifact.
+
+Metrics:
+
+overall health: 98.1%
+
+freshness: 99.4%
+
+customer identity match: 98.8%
+
+transaction completeness: 99.7%
+
+campaign mapping: 94.2%
+
+product taxonomy coverage: 97.1%
+
+Source table:
+
+Orders
+
+Order Items
+
+Customer
+
+Loyalty
+
+Promotions
+
+Meta Ads
+
+Google Ads
+
+App events
+
+Delivery events
+
+Product catalog
+
+Issues:
+
+5.8% of Meta campaign rows missing creative taxonomy
+
+Pinterest feed delayed 31 min
+
+1.2% household identity ambiguity
+
+2 categories changed taxonomy in July
+
+Each issue:
+
+affected analyses
+
+severity
+
+workaround
+
+status
+
+This page should be reachable from any investigation via:
+
+Check data health
+
+22. Analysis framework
+
+Use a consistent structure everywhere.
+
+1. Observe
+
+What changed?
+
+2. Segment
+
+Where did it change?
+
+3. Decompose
+
+Which mathematical drivers explain the topline shift?
+
+4. Hypothesize
+
+What mechanisms could cause it?
+
+5. Falsify
+
+Which competing explanations can be ruled out?
+
+6. Quantify
+
+What is the economic impact?
+
+7. Act
+
+What intervention should change behavior?
+
+8. Measure
+
+What leading indicator tells us if it worked?
+
+This is the backbone of the product.
+
+23. Grocery / QSR / Retail metric dictionary
+
+Build tooltips and definitions.
+
+Customer metrics
+
+New customer
+
+Customer making first known transaction.
+
+Active customer
+
+Customer with ≥1 purchase in selected period.
+
+Repeat rate
+
+Share of first-time customers making another purchase within a fixed time window.
+
+Visit frequency
+
+Orders / active customer / period.
+
+Recency
+
+Days since last transaction.
+
+Predicted LTV
+
+Expected future economic value over specified horizon.
+
+Always show the horizon:
+
+p90 LTV
+
+p180 LTV
+
+p365 LTV
+
+Never display ambiguous “LTV.”
+
+Basket metrics
+
+AOV
+
+Revenue / orders.
+
+Units per basket
+
+Units / order.
+
+Effective price per unit
+
+Net revenue / units.
+
+Category breadth
+
+Distinct categories purchased per customer / period.
+
+Attach rate
+
+Share of qualifying baskets containing a selected category/product.
+
+Loyalty
+
+penetration
+
+enrollment
+
+renewal
+
+member frequency
+
+member basket
+
+member retention
+
+incremental behavior
+
+Do not assume member vs non-member differences are causal.
+
+Promotions
+
+discount depth
+
+redemption
+
+promo penetration
+
+incremental conversion
+
+repeat after promo
+
+contribution after promo
+
+promo leakage
+
+Channels
+
+spend
+
+CAC
+
+first-order ROAS
+
+repeat
+
+pLTV
+
+LTV
+
+contribution
+
+payback
+
+Pricing
+
+list price
+
+effective realized price
+
+unit volume
+
+elasticity
+
+mix effect
+
+24. Analytical rigor rules
+
+The UI must explicitly distinguish:
+
+Descriptive
+
+Customers receiving >20% off have lower repeat rates.
+
+Predictive
+
+Customers with these features have a 68% estimated probability of failing to repeat.
+
+Causal / incremental
+
+Matched analysis estimates a -5.1 pp repeat difference after observable controls.
+
+Never casually turn correlation into causation.
+
+Use labels:
+
+Observed
+
+Predicted
+
+Estimated
+
+Matched comparison
+
+Experimental
+
+Causal evidence
+
+Add tooltips.
+
+25. Real cohort effect vs pricing artifact
+
+This phrase from the job description should become a core interaction.
+
+Build a reusable component:
+
+BehaviorVsPriceDecomposition
+
+Inputs:
+
+revenue
+
+orders
+
+units
+
+AOV
+
+effective price
+
+frequency
+
+active customers
+
+Output:
+
+Nominal growth
+
+Revenue +11.8%
+
+Price effect
+
++8.1 pp
+
+Volume / frequency effect
+
+-4.7 pp
+
+Customer-base effect
+
++8.4 pp
+
+Then conclusion:
+
+Topline growth is positive, but underlying repeat behavior weakened.
+
+Use this component in:
+
+Customer Overview
+
+Investigation Detail
+
+Basket & Frequency
+
+26. Share of wallet
+
+Because true share of wallet often requires external/category-spend data, do not fabricate precision.
+
+Implement:
+
+Observed wallet proxy
+
+Definition:
+
+Northstar spend / modeled category spend among customers with sufficient signals
+
+Mark:
+
+Modeled estimate
+
+For demo:
+
+High-value loyalty households: 47%
+
+High-value non-members: 31%
+
+Promotion-dependent: 18%
+
+Tooltip:
+
+Share of wallet is estimated because off-platform spend is not directly observed.
+
+This shows judgment.
+
+27. Loyalty economics
+
+Build a component:
+
+LoyaltyEconomicsPanel
+
+Compare:
+
+Members
+
+Matched non-members
+
+Raw non-members
+
+Metrics:
+
+frequency
+
+basket
+
+retention
+
+p180 LTV
+
+contribution
+
+Important:
+
+Raw difference should be larger than matched difference.
+
+Example:
+
+Raw member LTV advantage:
++61%
+
+Matched estimate:
++24%
+
+Narrative:
+
+Members are more valuable, but part of the gap reflects selection: stronger customers are also more likely to join. The matched comparison still suggests meaningful incremental value.
+
+This is exactly the sort of operator judgment the role wants.
+
+28. Promotional lift
+
+Build reusable:
+
+PromoIncrementalityPanel
+
+Show:
+
+redemption lift
+
+purchase lift
+
+basket effect
+
+repeat effect
+
+margin effect
+
+p180 contribution
+
+Example:
+
+20% first-order offer:
+
+Observed conversion:
++18%
+
+Matched incremental conversion:
++7%
+
+First-order margin:
+-$8.40
+
+90-day repeat:
+-5.1 pp
+
+Estimated p180 contribution:
+-$4.80 / customer
+
+Conclusion:
+
+Good short-term conversion; negative long-term economics for broad targeting.
+
+29. Win-back logic
+
+Create a small rule builder.
+
+Target:
+
+p180 LTV > $220
+AND expected cadence missed by > 21 days
+AND last purchase < 120 days
+AND no active service issue
+
+Eligible:
+
+84,318 customers
+
+Expected:
+
+14% incremental reactivation
+
+$420K recovered contribution
+
+Destination:
+CRM
+
+Action buttons:
+
+View cohort
+
+Add to readout
+
+Create experiment
+
+30. Assortment analysis
+
+Do not build a merchandising dashboard.
+
+Focus on behavioral relationship.
+
+Example question:
+
+Does prepared-food adoption increase customer frequency?
+
+Show:
+
+pre/post frequency
+
+matched customer comparison
+
+category attach
+
+substitution
+
+basket margin
+
+confidence
+
+caveat
+
+Potential conclusion:
+
+Prepared-food adoption is associated with higher subsequent frequency, but self-selection explains part of the effect. The strongest test would be a geo/store-level exposure experiment.
+
+Suggested action:
+
+Test increased prepared-food visibility in matched delivery zones.
+
+This demonstrates proper experimental thinking.
+
+31. Customer narrative generator
+
+Build a reusable right-side panel:
+
+Customer Narrative
+
+For any validated finding, output:
+
+What changed
+
+One sentence.
+
+Why
+
+One sentence.
+
+Money at stake
+
+One number.
+
+Recommended action
+
+One sentence.
+
+Confidence / caveat
+
+One sentence.
+
+Example:
+
+What changed
+New Meta Broad cohorts are repeating 9.8 pp less often than earlier cohorts.
+
+Why
+A shift toward lower-intent audiences explains roughly half of the decline; deeper first-order promotions amplify it.
+
+Money at stake
+$1.18M p180 revenue at risk.
+
+Action
+Move 12% of broad-audience spend toward higher-pLTV audiences and tighten deep-discount eligibility.
+
+Caveat
+Campaign creative metadata is not yet included.
+
+Button:
+
+Add to readout
+
+32. Product feedback generator
+
+For any investigation, button:
+
+Send feedback to Hilbert
+
+Pre-fill:
+
+Investigation
+
+Hilbert answer
+
+Operator judgment
+
+Missed variable
+
+Business impact
+
+Repro query
+
+Recommended behavior
+
+This mirrors the role's responsibility to feed customer learnings back into product / tech.
+
+33. Visual design
+
+Use:
+
+Next.js 15+
+
+TypeScript
+
+Tailwind
+
+shadcn/ui
+
+Recharts
+
+Lucide
+
+optional Monaco editor
+
+optional Framer Motion for subtle transitions only
+
+Style:
+
+white / warm-gray canvas
+
+charcoal
+
+muted borders
+
+restrained green / amber / red
+
+subtle blue for analytical selection
+
+no gradients
+
+no glassmorphism
+
+no neon
+
+no giant empty cards
+
+no excessive rounded corners
+
+no marketing-site aesthetic
+
+This should feel like a serious internal operator tool.
+
+Think:
+
+analytical notebook × customer workspace × decision system
+
+Not:
+
+startup SaaS dashboard
+
+34. Information density
+
+Desktop-first.
+
+Target:
+
+1440px.
+
+Sidebar:
+220px.
+
+Content:
+full-width analytical workspace.
+
+For investigation detail:
+
+Use 12-column grid.
+
+Possible:
+
+| main evidence 8 cols | judgment rail 4 cols |
+
+Judgment rail can show:
+
+Hilbert conclusion
+
+operator status
+
+confidence
+
+open questions
+
+next action
+
+Keep it sticky on desktop if practical.
+
+35. Key components
+
+Create:
+
+components/
+  layout/
+    AppSidebar.tsx
+    TopBar.tsx
+    CustomerSwitcher.tsx
+
+  operator/
+    InvestigationQueue.tsx
+    OperatorStatusBadge.tsx
+    ValidationChecklist.tsx
+    OperatorNote.tsx
+    CustomerMoment.tsx
+
+  analysis/
+    HypothesisCard.tsx
+    EvidenceCard.tsx
+    DriverDecomposition.tsx
+    BehaviorVsPriceDecomposition.tsx
+    PromoIncrementalityPanel.tsx
+    LoyaltyEconomicsPanel.tsx
+    CohortComparison.tsx
+    ConfidenceBadge.tsx
+    CausalEvidenceBadge.tsx
+    UnknownsPanel.tsx
+
+  charts/
+    CohortRetentionHeatmap.tsx
+    RetentionCurve.tsx
+    BasketTrend.tsx
+    PriceNormalizedTrend.tsx
+    PromoScatter.tsx
+    ChannelEconomicsChart.tsx
+    DriverContributionBar.tsx
+    FrequencyBasketMatrix.tsx
+    RevenueBridge.tsx
+
+  sql/
+    SqlEditor.tsx
+    SchemaExplorer.tsx
+    QueryResult.tsx
+    SavedQueryList.tsx
+
+  customer/
+    CustomerNarrative.tsx
+    ReadoutSection.tsx
+    PresentMode.tsx
+
+  feedback/
+    ProductFeedbackCard.tsx
+    FeedbackDetail.tsx
+    FeedbackComposer.tsx
+
+36. Types
+
+Create:
+
+type InvestigationStatus =
+  | "new"
+  | "testing"
+  | "validated"
+  | "rejected"
+  | "waiting_for_data"
+  | "ready_for_customer"
+  | "closed";
+
+type HypothesisStatus =
+  | "untested"
+  | "supported"
+  | "partially_supported"
+  | "ruled_out"
+  | "inconclusive";
+
+type EvidenceType =
+  | "descriptive"
+  | "predictive"
+  | "matched"
+  | "experimental"
+  | "causal";
+
+interface Investigation {
+  id: string;
+  title: string;
+  question: string;
+  trigger: string;
+  category: string;
+  economicImpact: number;
+  impactHorizon: string;
+  hilbertConfidence: number;
+  operatorStatus: InvestigationStatus;
+  customerStatus: "not_shared" | "draft" | "shared";
+  hilbertAnswer: string;
+  operatorConclusion?: string;
+  hypotheses: Hypothesis[];
+  evidence: EvidenceItem[];
+  validationChecks: ValidationCheck[];
+  recommendedActions: RecommendedAction[];
+  unknowns: string[];
+}
+
+interface Hypothesis {
+  id: string;
+  label: string;
+  statement: string;
+  status: HypothesisStatus;
+  evidenceFor: string[];
+  evidenceAgainst: string[];
+  confidence: number;
+}
+
+interface EvidenceItem {
+  id: string;
+  title: string;
+  type: EvidenceType;
+  metric?: string;
+  result: string;
+  source: string;
+  caveat?: string;
+}
+
+interface ValidationCheck {
+  id: string;
+  label: string;
+  completed: boolean;
+  result?: string;
+}
+
+interface RecommendedAction {
+  id: string;
+  title: string;
+  description: string;
+  expectedImpact: number;
+  impactHorizon: string;
+  timeToSignal: string;
+  risk: "low" | "medium" | "high";
+  measurementPlan: string[];
+}
+
+interface ProductFeedback {
+  id: string;
+  customer: string;
+  investigationId: string;
+  title: string;
+  hilbertOutput: string;
+  operatorFinding: string;
+  type:
+    | "reasoning"
+    | "metric_semantics"
+    | "data_quality"
+    | "causal_reasoning"
+    | "segment_definition";
+  severity: "low" | "medium" | "high";
+  reproducible: boolean;
+  recommendedFix: string;
+  status: "open" | "triaged" | "accepted" | "shipped";
+}
+
+37. Mock data structure
+
+Create:
+
+lib/mock-data/
+  customer.ts
+  investigations.ts
+  cohorts.ts
+  baskets.ts
+  promotions.ts
+  channels.ts
+  loyalty.ts
+  sql-results.ts
+  readout.ts
+  product-feedback.ts
+  decision-log.ts
+  data-health.ts
+
+Do not put large arrays in page components.
+
+38. Suggested customer data
+
+Use deterministic synthetic numbers.
+
+Core
+
+{
+  customer: "Northstar Market",
+  knownCustomers: 1700000,
+  activeCustomers: 648000,
+  locations: 42,
+  monthlyRevenue: 46200000,
+  monthlyOrders: 1080000,
+  aov: 42.78,
+  ordersPerActiveCustomer: 1.67,
+  repeat90d: 41.6,
+  blendedCac: 28.4,
+  p180Ltv: 164,
+  loyaltyPenetration: 31.8,
+  promoOrderShare: 37.4
+}
+
+Current issue
+
+{
+  newCustomerRevenueChange: 11.8,
+  newCustomerAovChange: 8.9,
+  newCustomerCountChange: 3.1,
+  repeat30dChangePP: -7.4,
+  frequency60dChange: -12.1,
+  p180LtvChange: -9.6,
+  revenueAtRisk180d: 1180000,
+  firstOrderDiscountBefore: 13.2,
+  firstOrderDiscountNow: 21.7,
+  effectivePriceChange: 7.6,
+  unitsPerFirstOrderChange: -3.8
+}
+
+39. Seed channel data
+
+[
+  {
+    channel: "Meta Broad",
+    spend: 2950000,
+    customers: 92000,
+    mixChangePP: 11.4,
+    cac: 32.1,
+    firstOrderRoas: 2.7,
+    repeat30d: 25.1,
+    p180Ltv: 118,
+    contributionPerCustomer: 36,
+    qualityTrend: -14.2
+  },
+  {
+    channel: "Meta Lookalike",
+    spend: 1520000,
+    customers: 41000,
+    mixChangePP: 2.8,
+    cac: 37.1,
+    firstOrderRoas: 2.2,
+    repeat30d: 36.4,
+    p180Ltv: 167,
+    contributionPerCustomer: 71,
+    qualityTrend: 2.1
+  },
+  {
+    channel: "Google Nonbrand",
+    spend: 1290000,
+    customers: 38000,
+    mixChangePP: -1.9,
+    cac: 33.9,
+    firstOrderRoas: 2.5,
+    repeat30d: 34.2,
+    p180Ltv: 154,
+    contributionPerCustomer: 64,
+    qualityTrend: -0.8
+  },
+  {
+    channel: "Google Brand",
+    spend: 783000,
+    customers: 27000,
+    mixChangePP: 0.7,
+    cac: 29.0,
+    firstOrderRoas: 3.3,
+    repeat30d: 39.8,
+    p180Ltv: 161,
+    contributionPerCustomer: 76,
+    qualityTrend: -1.2
+  },
+  {
+    channel: "Organic",
+    spend: 0,
+    customers: 61000,
+    mixChangePP: -8.1,
+    cac: 0,
+    firstOrderRoas: null,
+    repeat30d: 44.6,
+    p180Ltv: 181,
+    contributionPerCustomer: 94,
+    qualityTrend: 1.8
+  }
+]
+
+40. Seed cohort data
+
+Create monthly cohorts Jan–Jul.
+
+Paid-social repeat:
+
+Jan 36.2%
+
+Feb 35.8%
+
+Mar 35.1%
+
+Apr 34.7%
+
+May 30.3%
+
+Jun 27.8%
+
+Jul 25.4%
+
+Paid search:
+
+Jan 37.1%
+
+Feb 36.8%
+
+Mar 36.2%
+
+Apr 35.9%
+
+May 35.1%
+
+Jun 34.8%
+
+Jul 34.3%
+
+Organic:
+
+remain around 43–46%.
+
+This makes the divergence obvious without being absurd.
+
+41. SQL schema
+
+Use fictional tables.
+
+customers
+---------
+customer_id
+created_at
+home_market
+loyalty_member
+loyalty_join_date
+household_id
+
+orders
+------
+order_id
+customer_id
+order_date
+gross_revenue
+net_revenue
+discount_amount
+delivery_fee
+fulfillment_type
+location_id
+canceled
+on_time
+
+order_items
+-----------
+order_id
+sku_id
+quantity
+list_price
+net_price
+category
+
+acquisition
+-----------
+customer_id
+channel
+subchannel
+campaign_id
+acquisition_date
+spend_allocated
+
+promotions
+----------
+order_id
+promotion_id
+promotion_type
+discount_amount
+discount_pct
+
+loyalty
+-------
+customer_id
+status
+join_date
+renewal_count
+
+sessions
+--------
+customer_id
+session_date
+platform
+add_to_cart
+checkout_started
+
+product_catalog
+---------------
+sku_id
+category
+subcategory
+brand
+private_label
+
+fulfillment_events
+------------------
+order_id
+promised_minutes
+actual_minutes
+substitution_count
+refund_amount
+
+42. SQL saved query examples
+
+A. First order + second purchase
+
+Write realistic SQL.
+
+B. Price-normalized basket
+
+Decompose:
+
+revenue
+
+units
+
+effective price
+
+C. Promotion depth
+
+Bucket:
+
+0
+
+0–10%
+
+10–20%
+
+20–30%
+
+30%+
+
+Then measure:
+
+first-order contribution
+
+30D repeat
+
+90D orders
+
+p180 LTV
+
+D. Loyalty matched proxy
+
+Use a simplified matched-strata analysis by:
+
+acquisition month
+
+geography
+
+pre-membership frequency
+
+pre-membership AOV
+
+Do not pretend it is a randomized trial.
+
+43. Interaction: operator challenges Hilbert
+
+This is a must-have flow.
+
+Home shows:
+New paid cohorts show weaker repeat economics
+
+User opens investigation.
+
+Hilbert answer says:
+Primary driver: channel mix
+
+Operator clicks:
+Challenge conclusion
+
+Drawer asks:
+Which alternative explanation do you want to test?
+
+Select:
+Promotion depth
+
+Hilbert shows:
+Promotion depth changed +8.5 pp at the same time
+
+User clicks:
+Run matched-cohort test
+
+Result:
+Promotion remains associated with -5.1 pp repeat after observable controls
+
+Hilbert decomposition updates:
+
+channel mix 61% → 51%
+
+promotion 17% → 27%
+
+Banner:
+Conclusion updated based on operator validation
+
+Button:
+Send reasoning feedback to Product
+
+Feedback form pre-populates.
+
+This single workflow is arguably the most important demonstration in the project.
+
+44. Interaction: build customer readout
+
+Investigation reaches:
+Validated
+
+User clicks:
+Add to customer readout
+
+Readout gains:
+
+finding
+
+chart
+
+money at stake
+
+action
+
+caveat
+
+User opens /customer-readout
+
+Switches:
+Executive
+
+Sees a clean 1-page narrative
+
+Enters Present Mode
+
+No actual PowerPoint export needed.
+
+45. Interaction: SQL artifact
+
+From Investigation Detail:
+Open in SQL Lab
+
+Query appears.
+
+User runs.
+
+Table returns deterministic results.
+
+User switches to chart.
+
+Adds chart to investigation.
+
+Investigation shows:
+Operator-validated evidence
+
+This proves analytical ownership.
+
+46. Confidence model
+
+Use confidence carefully.
+
+Hilbert confidence:
+model / evidence confidence.
+
+Operator confidence:
+human judgment after validation.
+
+Display separately.
+
+Example:
+
+Hilbert: 88%
+Operator: High
+
+Do not collapse these.
+
+Tooltip:
+
+Hilbert confidence reflects model and evidence consistency. Operator confidence reflects validation status and remaining unknowns.
+
+47. Customer-ready status
+
+An investigation can only be marked:
+
+Ready for customer
+
+when:
+
+at least 70% validation checks complete
+
+economic impact quantified
+
+caveats entered
+
+recommended action entered
+
+data health not critical
+
+Implement this simple validation rule in local UI state.
+
+If user tries before:
+
+Show:
+
+3 items remain before this is customer-ready.
+
+This makes the workflow feel operational.
+
+48. Product feedback status
+
+Feedback lifecycle:
+
+Open
+
+Triaged
+
+Accepted
+
+Shipped
+
+Clicking a Product Feedback row opens:
+
+original Hilbert answer
+
+operator correction
+
+impact on customer decision
+
+query / evidence
+
+proposed product change
+
+This makes the artifact relevant to product evolution, not just customer analysis.
+
+49. Copy style
+
+Use language an operator would use.
+
+Good:
+
+Repeat deterioration is concentrated in Meta Broad cohorts acquired after May.
+
+Bad:
+
+AI has surfaced a powerful insight into your retention journey.
+
+Good:
+
+Pricing explains the AOV increase but not the repeat decline.
+
+Bad:
+
+Our advanced models disentangle complex multifactor dynamics.
+
+Good:
+
+The promotion result is observational and may still contain residual confounding.
+
+Bad:
+
+Hilbert proves discounts are causing churn.
+
+No AI slop.
+
+No hype copy inside the application.
+
+50. Charts
+
+Use:
+
+retention curves
+
+cohort heatmaps
+
+bars
+
+scatter plots
+
+decomposition bars
+
+waterfall / bridge
+
+matrix
+
+line charts
+
+Avoid:
+
+pie charts
+
+gauges
+
+3D
+
+rainbow heatmaps
+
+decorative charts
+
+Every chart should have:
+
+title
+
+unit
+
+axis labels
+
+tooltip
+
+selected period
+
+source
+
+caveat when needed
+
+51. Source labels
+
+Every analytical panel should have a subtle footer:
+
+Examples:
+
+Source: orders + acquisition · 648K active customers
+
+Source: order_items · price-normalized
+
+Source: promotions + cohort features · matched observational comparison
+
+Synthetic demo data
+
+This makes the work look rigorous.
+
+52. Data source health
+
+Data source state can modify confidence.
+
+Example:
+
+If campaign mapping completeness <95%:
+
+Channel conclusion warning:
+
+Campaign-level attribution confidence reduced because 5.8% of rows lack creative taxonomy.
+
+This should be reflected in the UI.
+
+53. Experiment design
+
+For actions that are not already validated, suggest a test.
+
+Example:
+
+Prepared foods.
+
+Test:
+
+matched delivery zones
+
+4-week period
+
+treatment: increased prepared-food placement
+
+primary: visit frequency
+
+secondary: basket
+
+guardrail: contribution margin
+
+Example:
+
+Promotion targeting.
+
+Test:
+
+eligible low-intent first-time users
+
+treatment: 10% offer
+
+control: 20% offer
+
+primary: p90 contribution
+
+secondary: second-purchase conversion
+
+guardrail: first-order conversion
+
+Keep stats simple but credible.
+
+54. Evaluation rubric
+
+The artifact should make an interviewer think:
+
+Analytical
+
+This person knows how to decompose a metric and test explanations.
+
+B2C fluent
+
+This person understands frequency, basket, promotions, loyalty, acquisition quality, LTV, and retention.
+
+Operator-minded
+
+This person cares about getting to a decision, not making charts.
+
+AI-native
+
+This person can work with an AI system without blindly trusting it.
+
+Customer-ready
+
+This person can turn analysis into a concise commercial narrative.
+
+Product-minded
+
+This person can identify when Hilbert's reasoning needs improvement and communicate the issue clearly to technical teams.
+
+55. Avoid overbuilding
+
+Do NOT spend disproportionate time on:
+
+settings
+
+authentication
+
+generic admin
+
+user management
+
+billing
+
+marketing pages
+
+notifications
+
+decorative dashboards
+
+integrations marketplace
+
+dozens of secondary charts
+
+Prioritize:
+
+Investigation Detail
+
+Cohort Explorer
+
+SQL Lab
+
+Customer Readout
+
+Product Feedback
+
+Basket / Promotion analysis
+
+If scope must be cut, cut everything else before these.
+
+56. Build order
+
+Phase 1
+
+shell
+
+navigation
+
+design system
+
+types
+
+mock data
+
+Phase 2
+
+Operator Home
+
+Customer Overview
+
+Investigations list
+
+Phase 3
+
+Investigation Detail
+
+hypothesis cards
+
+validation checklist
+
+cohort evidence
+
+price decomposition
+
+promotion matching result
+
+channel decomposition
+
+Phase 4
+
+Cohorts
+
+Basket & Frequency
+
+Promotions
+
+Channels
+
+Phase 5
+
+SQL Lab
+
+saved queries
+
+deterministic results
+
+add-to-investigation action
+
+Phase 6
+
+Customer Readout
+
+present mode
+
+analytical appendix
+
+Phase 7
+
+Product Feedback
+
+challenge-Hilbert flow
+
+Decision Log
+
+Data Health
+
+Phase 8
+
+polish
+
+responsive
+
+accessibility
+
+empty/loading/error states
+
+keyboard interactions
+
+57. Technical quality bar
+
+Before completion:
+
+run lint
+
+run typecheck
+
+eliminate console errors
+
+test every route
+
+test all primary interactions
+
+verify data consistency
+
+verify no dead CTAs in main workflow
+
+verify all dollar amounts have time horizons
+
+verify LTV metrics include horizon
+
+verify descriptive vs causal wording is correct
+
+verify all demo data is labeled synthetic
+
+verify 1440px layout
+
+verify sticky rails do not overlap content
+
+verify chart tooltips
+
+verify readable table density
+
+58. Final product story
+
+The final demo should be presentable in roughly 5 minutes.
+
+Minute 1 — Context
+
+Open Northstar.
+
+Say:
+
+The job is about running Hilbert against real grocery/QSR/retail datasets, checking where the reasoning is right or wrong, and turning that into customer action. So I built the workflow around that rather than building another KPI dashboard.
+
+Minute 2 — Detection
+
+Open the new-cohort investigation.
+
+Show:
+
+revenue up
+
+AOV up
+
+repeat down
+
+p180 LTV down
+
+Say:
+
+The first trap is thinking the topline is healthy.
+
+Minute 3 — Judgment
+
+Show:
+
+price normalization
+
+promotion match
+
+channel mix
+
+hypotheses
+
+ruled-out fulfillment/data issues
+
+Say:
+
+Hilbert initially attributes most of the deterioration to channel mix. The operator challenges that because promotion policy changed at the same time.
+
+Run the matched analysis.
+
+Show updated decomposition.
+
+Minute 4 — Customer action
+
+Show:
+
+final conclusion
+
+$1.18M at risk
+
+three actions
+
+Customer Readout
+
+Say:
+
+The output isn't the chart. It's a defensible customer narrative and a decision.
+
+Minute 5 — Product loop
+
+Show Product Feedback.
+
+Say:
+
+The other half of the role is making Hilbert better. The same investigation becomes structured product feedback: what the model missed, how to reproduce it, and what behavior should change.
+
+This should be the emotional center of the demo.
+
+59. Final instruction to Claude Code
+
+Do not build a generic analytics dashboard.
+
+Build a Growth Operator Workbench centered on:
+
+question → hypothesis → evidence → falsification → judgment → customer action → product learning
+
+The product must demonstrate that a strong Hilbert operator can:
+
+work directly with messy B2C data,
+
+reason through grocery / QSR / retail mechanics,
+
+challenge AI conclusions,
+
+use SQL to validate a claim,
+
+distinguish price/mix artifacts from true cohort behavior,
+
+quantify the commercial impact,
+
+communicate a concise growth narrative,
+
+and make the underlying Hilbert product smarter.
+
+If a feature does not help demonstrate one of those abilities, cut it.pls 

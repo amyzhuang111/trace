@@ -1,0 +1,1546 @@
+CLAUDE.md — Hilbert GQR Reasoning Unit Tests
+
+0. Build this
+
+Build a new, versioned test asset for Hilbert called:
+
+Hilbert GQR Reasoning Unit Tests
+
+A contrastive, source-backed test suite for Grocery, QSR & Retail growth reasoning.
+
+This is NOT:
+
+an eval platform
+
+a customer report
+
+a customer-facing diagnosis
+
+a Hilbert replacement
+
+a dashboard
+
+an ICP tool
+
+an ingestion product
+
+a generic benchmark
+
+It is a portable test pack that Hilbert's existing / future evaluation infrastructure can consume.
+
+The core unit is not a standalone case.
+
+It is a contrastive pair:
+
+two real cases that look similar on the surface but differ in one important underlying mechanic.
+
+The test asks:
+
+Does Hilbert change its conclusion when the mechanic changes?
+
+or:
+
+Does Hilbert keep its conclusion stable when only irrelevant information changes?
+
+That makes the suite much harder to game with generic cautious prose.
+
+1. Why this is the final project
+
+Hilbert already publicly says it:
+
+detects metric shifts,
+
+reasons over cohorts, products, channels and unit economics,
+
+performs root-cause analysis and counterfactual reasoning,
+
+analyzes promotions, pricing, loyalty, frequency and returns,
+
+is building systematic evaluation pipelines.
+
+Therefore do NOT build:
+
+another reasoning engine,
+
+another eval harness,
+
+another customer-facing analysis surface.
+
+The Growth Operator role specifically owns:
+
+testing Hilbert on real GQR problems,
+
+finding what it gets right,
+
+finding what it misses,
+
+finding where reasoning needs sharpening,
+
+turning those findings into structured Product / Tech input.
+
+This test suite is the operator-owned domain asset that feeds that process.
+
+2. Exact non-overlap guarantee
+
+No outsider can prove Hilbert has no analogous internal tests.
+
+So guarantee non-overlap at the artifact level.
+
+Create:
+
+GQR-Reasoning-UnitTests-v2026.08.16
+
+with:
+
+newly selected real data slices,
+
+newly defined contrastive pairings,
+
+newly defined behavioral contracts,
+
+new deterministic assertions,
+
+source hashes,
+
+case hashes,
+
+release hash.
+
+This exact test release does not exist until this project creates it.
+
+If Hilbert already has eval infrastructure, operator QA, or internal golden cases, that is fine.
+
+This artifact should plug into those systems as a new vertical-specific test pack.
+
+3. Why contrastive tests are better than ordinary gold cases
+
+A normal benchmark asks:
+
+Is this answer good?
+
+A contrastive test asks:
+
+Case A and Case B have nearly identical headline revenue.
+
+But:
+
+A = higher frequency, flat basket
+B = lower frequency, higher basket
+
+Did the diagnosis change correctly?
+
+This reveals whether the system actually understands the growth mechanic.
+
+The suite should use three behavioral-test families:
+
+A. Directional sensitivity
+
+A meaningful variable changes.
+
+Expected:
+
+diagnosis must change
+
+B. Invariance
+
+An irrelevant variable changes.
+
+Expected:
+
+diagnosis should not materially change
+
+C. Refusal / causal discipline
+
+Evidence remains observational or ambiguous.
+
+Expected:
+
+system must not make the unsupported claim
+
+4. Real data only
+
+Production release must contain no fake source data.
+
+Use:
+
+Track A — Customer-level transaction mechanics
+
+Primary dataset:
+dunnhumby The Complete Journey
+
+Use the real household-level transaction and direct-marketing history.
+
+Optional second dataset:
+UCI Online Retail II
+
+Use it to test generalization outside grocery.
+
+Track B — Public-company operating semantics
+
+Use:
+
+SEC filings
+
+SEC-filed 8-K earnings exhibits
+
+official company investor-relations releases
+
+Use QSR / Grocery / Retail issuers.
+
+No third-party commentary as gold evidence.
+
+5. What may be derived
+
+It is acceptable to derive deterministic metrics from real source records.
+
+Examples:
+
+revenue/customer
+visits/customer
+orders/customer
+units/basket
+AOV
+realized price/unit
+30D repeat
+60D repeat
+90D repeat
+cohort retention
+discount exposure
+coupon redemption
+post-promotion repeat
+category penetration
+SKU mix
+customer mix
+
+Every derived metric must have:
+
+source dataset
+query
+time window
+filters
+expected value
+tolerance
+
+6. What may NOT be invented
+
+Do not invent:
+
+fake customers
+
+fake rows
+
+fake sales
+
+fake transactions
+
+fake campaign outcomes
+
+fake causal effects
+
+For V1, contrastive pairs should be formed from:
+
+two real slices of a source dataset, or
+
+the same real case with a non-substantive presentation transformation for invariance testing.
+
+Do NOT numerically perturb real data to manufacture a desired conclusion in V1.
+
+7. Core insight
+
+The suite should test:
+
+Does the reasoning respond to the mechanic, not the headline KPI?
+
+This is the organizing principle.
+
+8. Test family 1 — Same revenue, different frequency
+
+Mine two real cohorts / periods where revenue/customer is similar but:
+
+frequency differs materially
+
+basket differs in the opposite direction
+
+Expected distinction:
+
+Frequency-led
+
+High visits/customer is the stronger driver.
+
+Basket-led
+
+Higher spend/order is offsetting weaker frequency.
+
+Failure:
+both are described as “healthy customer growth” without distinguishing the mechanics.
+
+9. Test family 2 — Same AOV, different unit economics
+
+Find real slices with similar AOV but different:
+
+units/basket
+
+realized price/unit
+
+category mix
+
+Expected:
+Hilbert must not treat identical AOV as identical pricing behavior.
+
+Behavioral contract:
+
+If units/basket differs materially,
+diagnosis must mention quantity / mix uncertainty or difference.
+
+Forbidden:
+
+AOV increased because prices increased
+
+unless price/unit evidence supports it.
+
+10. Test family 3 — Same acquisition volume, different downstream quality
+
+Use real first-purchase cohorts with similar acquisition / new-customer count but different:
+
+30D repeat
+
+60D repeat
+
+revenue/customer
+
+second-order timing
+
+Expected:
+Hilbert must distinguish acquisition volume from quality / compounding.
+
+Failure:
+celebrating the cohort with weaker repeat simply because more users were acquired.
+
+11. Test family 4 — Promotion exposure vs incremental effect
+
+Use real promotion / coupon exposure data.
+
+Build a descriptive case:
+
+exposed cohort repeat > unexposed cohort repeat
+
+Expected:
+Hilbert may report association.
+
+Hilbert must NOT automatically report:
+
+promotion caused +Xpp repeat
+
+unless the test design supports causal inference.
+
+Contract:
+
+association_allowed = true
+incrementality_claim_allowed = false
+
+If valid causal identification is not available, do not create a causal-positive pair.
+
+Accuracy matters more than symmetry.
+
+12. Test family 5 — Pre-existing loyalty selection
+
+Find real customer groups where the future high-value / exposed group already had stronger behavior before exposure.
+
+Expected:
+Hilbert must flag selection risk.
+
+If the pre-period gap is material, forbid:
+
+program caused the entire post-period gap
+
+13. Test family 6 — Headline sales vs traffic/ticket
+
+Use official QSR releases.
+
+Contrast real periods such as:
+
+Pattern A
+
+comp +
+transactions +
+ticket +
+
+Pattern B
+
+comp +
+transactions -
+ticket +
+
+Even if comparable sales are similar, diagnosis must differ.
+
+A:
+demand-supported
+
+B:
+ticket-supported with transaction pressure
+
+Do not require those exact phrases.
+
+Require the mechanical distinction.
+
+14. Test family 7 — Total growth vs existing-store health
+
+Use public companies reporting:
+
+total revenue growth
+
+comparable sales
+
+location growth
+
+Find two real periods with similar total growth but different comp / footprint contributions.
+
+Expected:
+Hilbert must distinguish new-unit contribution from existing-store growth.
+
+Forbidden:
+
+same-store health improved
+
+when only total revenue grew.
+
+15. Test family 8 — Digital growth vs incrementality
+
+Use real reported digital / eCommerce growth.
+
+Pair:
+
+strong digital + strong overall demand
+
+strong digital + weak overall demand
+
+Expected:
+the second should raise channel-migration / mix questions.
+
+Forbidden in both unless proven:
+
+digital caused incremental demand
+
+16. Test family 9 — Definition / scope traps
+
+Use real primary-source definition differences.
+
+Examples:
+
+reported comparable sales
+vs
+ex-fuel comparable sales
+
+eCommerce comparable sales
+vs
+digitally enabled comparable sales
+
+U.S. comp
+vs
+global comp
+
+Expected:
+Hilbert refuses an invalid direct comparison or explicitly normalizes scope.
+
+This is a deterministic semantic test.
+
+17. Test family 10 — Margin quality
+
+Use real data when available.
+
+Pair two cases with similar revenue growth but different:
+
+discount rate
+
+returns
+
+unit contribution proxy
+
+promotion intensity
+
+Expected:
+Hilbert must not treat equal topline as equal-quality growth.
+
+18. Test family 11 — Hindsight invariance
+
+For historical public-company cases:
+
+Blind input must contain only information available at time T.
+
+Run the test.
+
+Then reveal T+1 separately.
+
+Do NOT include future evidence in the original answer.
+
+Test objective:
+
+Did the model overstate a temporary one-period pattern as structural?
+
+19. Test family 12 — Wording invariance
+
+Take the same real case.
+
+Create two prompts with equivalent data but different ordering / formatting.
+
+Expected:
+same mechanical diagnosis.
+
+If answer changes materially:
+
+presentation sensitivity failure
+
+This requires no fake data.
+
+20. Test family 13 — Irrelevant-context invariance
+
+Add a true but irrelevant field from the same source record.
+
+Expected:
+core diagnosis unchanged.
+
+This tests whether the model is anchored to irrelevant context.
+
+21. Anonymized identity test
+
+For public-company cases, run both:
+
+named company
+
+anonymized company identity
+
+with identical metrics.
+
+Expected:
+mechanical conclusion remains consistent.
+
+Flag:
+
+brand prior leakage
+
+when answer changes beyond configured tolerance.
+
+22. Unit-test schema
+
+interface GQRReasoningUnitTest {
+  id: string;
+  releaseVersion: string;
+
+  capability:
+    | "frequency_vs_basket"
+    | "aov_decomposition"
+    | "cohort_quality"
+    | "promotion_causality"
+    | "loyalty_selection"
+    | "traffic_ticket"
+    | "footprint_vs_comp"
+    | "digital_incrementality"
+    | "metric_semantics"
+    | "margin_quality"
+    | "hindsight"
+    | "invariance";
+
+  testType:
+    | "sensitivity"
+    | "invariance"
+    | "refusal"
+    | "calculation";
+
+  baseCase: TestCaseInput;
+  contrastCase?: TestCaseInput;
+
+  assertions: TestAssertion[];
+
+  provenance: Provenance;
+
+  caseHash: string;
+}
+
+23. Test case input
+
+interface TestCaseInput {
+  caseId: string;
+
+  vertical: "grocery" | "qsr" | "retail";
+
+  identityMode:
+    | "named"
+    | "anonymized";
+
+  prompt: string;
+
+  metrics: {
+    nativeLabel: string;
+    normalizedMetric: string;
+    value: number;
+    unit: string;
+  }[];
+
+  allowedContext: Record<string, string | number>;
+
+  sourceIds: string[];
+}
+
+24. Assertions — not prose scoring
+
+Do NOT primarily score the answer using a fuzzy 100-point prose rubric.
+
+Use behavioral assertions.
+
+Types:
+
+type AssertionType =
+  | "must_identify"
+  | "must_not_claim"
+  | "must_request"
+  | "must_change_between_pair"
+  | "must_remain_invariant"
+  | "numeric_answer"
+  | "ranking";
+
+25. Assertion examples
+
+Must identify
+
+{
+  "type": "must_identify",
+  "concept": "frequency_declined"
+}
+
+Must not claim
+
+{
+  "type": "must_not_claim",
+  "concept": "aov_equals_price"
+}
+
+Must request
+
+{
+  "type": "must_request",
+  "concept": "price_units_mix_decomposition"
+}
+
+Pair sensitivity
+
+{
+  "type": "must_change_between_pair",
+  "dimension": "primary_growth_mechanic",
+  "baseExpected": "frequency_led",
+  "contrastExpected": "basket_led"
+}
+
+Invariance
+
+{
+  "type": "must_remain_invariant",
+  "dimension": "primary_growth_mechanic"
+}
+
+26. Structured answer contract
+
+Do not ask for chain of thought.
+
+Request:
+
+interface ReasoningTestAnswer {
+  primaryMechanic: string;
+  observedFacts: string[];
+  unsupportedClaimsToAvoid: string[];
+  highestInformationNextTest: string;
+  missingEvidence: string[];
+  confidence:
+    | "high"
+    | "medium"
+    | "low";
+}
+
+This is enough to test behavior.
+
+27. Deterministic arithmetic checks
+
+Some tests should have exact numeric answers.
+
+Examples:
+
+AOV
+
+frequency
+
+repeat
+
+revenue/customer
+
+price/unit
+
+units/basket
+
+contribution proxy
+
+cohort delta
+
+Expected values should include a tolerance.
+
+These form the base layer.
+
+28. Behavioral pass logic
+
+Each test has critical and non-critical assertions.
+
+if (criticalAssertionFails) {
+  status = "FAIL";
+} else if (allAssertionsPass) {
+  status = "PASS";
+} else {
+  status = "PARTIAL";
+}
+
+Do not allow a high prose score to compensate for a critical reasoning error.
+
+Example:
+
+If Hilbert says AOV means price on a case where that is unsupported:
+
+FAIL.
+
+29. Severity
+
+type Severity =
+  | "critical"
+  | "major"
+  | "minor";
+
+Critical examples:
+
+unsupported causal claim
+
+invalid metric comparison
+
+wrong sign / arithmetic
+
+direct contradiction of provided evidence
+
+Major:
+
+missed dominant mechanic
+
+wrong next-test priority
+
+Minor:
+
+secondary omission
+
+30. Core metrics for the suite
+
+Instead of one benchmark score, show:
+
+Calculation Accuracy
+Mechanic Sensitivity
+Invariance
+Causal Discipline
+Semantic Discipline
+Next-Test Accuracy
+
+This is more useful to Product / ML.
+
+31. Pair Flip Accuracy
+
+For sensitivity tests:
+
+Pair Flip Accuracy
+=
+pairs where conclusion correctly changes
+/
+all sensitivity pairs
+
+This answers:
+
+Does Hilbert actually respond to the variable that matters?
+
+32. Invariance Accuracy
+
+Invariance Accuracy
+=
+invariance tests where core answer stays stable
+/
+all invariance tests
+
+This catches:
+
+wording sensitivity
+
+brand anchoring
+
+irrelevant-context anchoring
+
+33. Forbidden Claim Rate
+
+Forbidden Claim Rate
+=
+tests containing unsupported critical claim
+/
+eligible tests
+
+Lower is better.
+
+Examples:
+
+promotion caused lift
+
+loyalty caused value
+
+ticket = price
+
+digital = incremental
+
+34. Next-Test Accuracy
+
+Each case has:
+
+gold top-1 test
+
+acceptable alternatives
+
+low-value generic tests
+
+Score:
+
+Top-1 correct
+Top-3 contains correct
+
+This directly evaluates Growth Operator usefulness.
+
+35. Why "next test" matters
+
+Hilbert's operator does not merely need to name the pattern.
+
+They need to decide:
+
+What analysis reduces uncertainty fastest?
+
+Example:
+
+If:
+
+AOV +
+frequency -
+
+a generic response:
+
+analyze customer segments
+
+is less useful than:
+
+decompose AOV into realized price, units, and mix before attributing the offset
+
+The unit tests should capture this ordering.
+
+36. Failure taxonomy
+
+type FailureTag =
+  | "aov_equals_price"
+  | "revenue_equals_health"
+  | "digital_equals_incremental"
+  | "promotion_equals_incremental"
+  | "loyalty_selection_ignored"
+  | "traffic_ignored"
+  | "frequency_ignored"
+  | "footprint_comp_confusion"
+  | "scope_mismatch"
+  | "adjustment_mismatch"
+  | "brand_prior_leakage"
+  | "wording_instability"
+  | "hindsight_leakage"
+  | "generic_next_test"
+  | "wrong_test_priority"
+  | "arithmetic_error";
+
+37. Product / ML output only
+
+This project NEVER generates a customer-facing report.
+
+Outputs:
+
+Test Result
+
+FAIL
+
+Failure
+
+AOV = price
+
+Why
+
+AOV is observed, but the case does not isolate realized price from units / mix.
+
+Expected behavior
+
+Request price/unit and units/basket decomposition before assigning driver.
+
+Regression ID
+
+GQR-AOV-014
+
+Stop there.
+
+No customer narrative.
+
+38. Operator output
+
+Operator mode should show:
+
+What the test was designed to catch
+Why the failure matters
+What evidence would resolve it
+
+This is training / calibration.
+
+Not customer reporting.
+
+39. Product Note export
+
+Create:
+
+# GQR Reasoning Failure
+
+Test:
+GQR-AOV-014
+
+Capability:
+AOV decomposition
+
+Severity:
+Critical
+
+Observed behavior:
+Hilbert attributed AOV increase to pricing.
+
+Why it fails:
+The source data shows AOV but does not isolate price from units or mix.
+
+Expected behavior:
+Treat AOV as composite; inspect realized price/unit and units/basket before assigning pricing.
+
+Regression:
+Add GQR-AOV-014 to release gate.
+
+This is the most important export.
+
+40. Release gate
+
+Support a simple configurable release-gate object.
+
+Example defaults:
+
+const releaseGate = {
+  criticalFailureCount: 0,
+  calculationAccuracyMin: 0.99,
+  mechanicSensitivityMin: 0.90,
+  causalDisciplineMin: 0.95,
+  semanticDisciplineMin: 0.95
+};
+
+These are project defaults, not Hilbert official thresholds.
+
+41. Build a Core 24 first
+
+Do not build 100 immediately.
+
+Create:
+
+24 tests
+
+Distribution:
+
+4 frequency vs basket
+3 AOV decomposition
+3 cohort quality
+3 promotion / causality
+2 loyalty selection
+3 traffic / ticket
+2 footprint / comp
+2 digital
+2 metric semantics
+
+Then add contrast / invariance variants.
+
+Aim:
+
+24 base cases
++
+24 contrasts
+=
+48 test executions
+
+This is enough for a strong interview artifact.
+
+42. Core 24 quality requirements
+
+Every test must:
+
+represent a meaningful Hilbert-like failure
+
+use real source data
+
+have deterministic calculations
+
+have at least one explicit assertion
+
+have exact provenance
+
+be understandable in <2 minutes
+
+produce actionable Product / operator learning
+
+No filler cases.
+
+43. Source data — dunnhumby
+
+Build a preprocessing notebook / script.
+
+Use DuckDB or Python/pandas.
+
+Do not ship the source dataset inside the repository if licensing / distribution terms do not permit redistribution.
+
+Instead support:
+
+DUNNHUMBY_DATA_DIR=/path/to/source/files
+
+Generate only derived case artifacts necessary for evaluation, subject to source terms.
+
+Document source acquisition.
+
+44. Source data — public company filings
+
+Use cached primary documents.
+
+SEC:
+
+https://www.sec.gov/files/company_tickers.json
+https://data.sec.gov/submissions/CIK##########.json
+
+Official IR HTML when appropriate.
+
+Store only necessary evidence snippets and source metadata.
+
+45. Data leakage guard
+
+For every blind case:
+
+assert(blindTextDoesNotContain(revealOnlyFacts));
+
+Historical cases must not expose:
+
+subsequent quarter
+
+later management explanation
+
+future outcome
+
+before evaluation.
+
+46. Provenance
+
+interface Provenance {
+  sourceType:
+    | "dunnhumby"
+    | "uci"
+    | "sec"
+    | "official_ir";
+
+  sourceReference: string;
+  sourceHash?: string;
+  extractionQuery?: string;
+
+  window?: {
+    start: string;
+    end: string;
+  };
+
+  filters?: Record<string, unknown>;
+
+  generatedAt: string;
+}
+
+47. Exact reproducibility
+
+Every transaction test should store:
+
+SQL query
+or
+Python transformation ID
+
+Command:
+
+npm run reproduce -- --test GQR-FREQ-001
+
+should recompute expected metrics from the local source dataset.
+
+If result differs beyond tolerance:
+
+FAIL DATA VALIDATION.
+
+48. Dataset version
+
+Release:
+
+GQR-Reasoning-UnitTests-v2026.08.16
+
+Generate:
+
+release/
+  manifest.json
+  tests.json
+  failure-taxonomy.json
+  capability-map.json
+
+Manifest:
+
+interface Manifest {
+  name: "Hilbert GQR Reasoning Unit Tests";
+  version: string;
+  cutoffDate: string;
+  testCount: number;
+  contrastPairCount: number;
+  sourceCount: number;
+  releaseSha256: string;
+}
+
+49. Why hashing matters
+
+It provides the strongest defensible answer to:
+
+Are you sure Hilbert doesn't already have this?
+
+Answer:
+
+They may have analogous internal tests. But this exact release is newly generated from this specific real-data case selection, test contract, pair structure, and release hash.
+
+Do not overclaim beyond that.
+
+50. UI
+
+Keep it extremely small.
+
+Routes:
+
+/
+ /run
+ /tests
+ /tests/[id]
+ /results
+ /failures
+ /about
+
+Default:
+
+/run
+
+51. Run screen
+
+Show a case or contrastive pair, allow a Hilbert/operator output to be pasted, then run assertions.
+
+After both cases in a sensitivity pair:
+
+PAIR RESULT
+
+Mechanic changed:
+PASS / FAIL
+
+Forbidden claims:
+PASS / FAIL
+
+Next test:
+PASS / FAIL
+
+52. Results
+
+Show only actual run results:
+
+Calculation Accuracy
+Mechanic Sensitivity
+Invariance
+Causal Discipline
+Semantic Discipline
+Next-Test Top-1
+
+No seeded demo percentages.
+
+53. Failure Atlas
+
+Aggregate failures by exact behavior.
+
+Example:
+
+AOV = price
+3 failures / 8 exposures
+
+Promotion = incrementality
+2 / 5
+
+Brand prior leakage
+1 / 6
+
+Click into exact regression tests.
+
+54. Compare versions
+
+User-entered labels:
+
+Hilbert current
+Hilbert candidate
+Prompt v7
+
+Run same Core 24.
+
+Compare capability metrics.
+
+No Hilbert backend integration required.
+
+55. Manual vs AI assertion evaluation
+
+For numeric assertions:
+
+always deterministic.
+
+For structured concept assertions:
+
+V1 can use manual pass/fail/partial.
+
+Optional model-assisted judging can map structured answers to known concepts, with human override.
+
+Do not depend on LLM-as-judge for the product to work.
+
+56. Easy Claude Code architecture
+
+Use:
+
+Next.js
+TypeScript
+Tailwind
+shadcn/ui
+Zod
+DuckDB / Python preprocessing
+JSON test packs
+localStorage
+Node crypto
+
+No:
+
+Supabase
+
+auth
+
+vector DB
+
+agent framework
+
+CRM
+
+customer integration
+
+Hilbert API
+
+server-side queue
+
+57. Repository
+
+app/
+  run/
+  tests/
+  results/
+  failures/
+  about/
+
+components/
+  CaseCard.tsx
+  PairComparison.tsx
+  AssertionResult.tsx
+  FailureCard.tsx
+  CapabilityScore.tsx
+
+lib/
+  assertions/
+    evaluate.ts
+    numeric.ts
+    concepts.ts
+    pair.ts
+
+  metrics/
+    cohort.ts
+    basket.ts
+    repeat.ts
+    pricing.ts
+    promotion.ts
+
+  release/
+    canonicalize.ts
+    hash.ts
+    validate.ts
+
+data/
+  tests/
+  releases/
+
+scripts/
+  prepare-dunnhumby.py
+  prepare-public-company.ts
+  mine-pairs.py
+  build-release.ts
+  reproduce-test.py
+
+config/
+  tolerances.ts
+  release-gate.ts
+
+58. Mining real contrastive pairs
+
+Write a script that searches real cohort / time-window candidates.
+
+Example logic:
+
+pairs = []
+
+for a in candidates:
+    for b in candidates:
+        if a.id == b.id:
+            continue
+
+        if abs(a.revenue_per_customer_pct - b.revenue_per_customer_pct) <= 2:
+            if (
+                a.visit_frequency_pct >= 5
+                and b.visit_frequency_pct <= -5
+                and a.aov_pct <= b.aov_pct
+            ):
+                pairs.append((a, b))
+
+Then manually inspect / approve.
+
+Do not automatically call mined pairs gold.
+
+59. Difficulty from distance
+
+Tag pair difficulty based on headline similarity.
+
+Easy:
+headline metrics differ clearly
+
+Medium:
+headline revenue within 5pp
+
+Hard:
+headline revenue within 2pp but underlying mechanics materially differ
+
+Prioritize hard cases.
+
+60. Real-data preservation
+
+The goal is not to construct a trick.
+
+The goal is to identify naturally occurring cases where:
+
+surface similarity
+!=
+mechanical similarity
+
+That is exactly where reasoning quality matters.
+
+61. Capability matrix
+
+Create a matrix covering:
+
+cohorts
+
+basket
+
+promotion
+
+loyalty
+
+traffic/ticket
+
+metric semantics
+
+across:
+
+exact calculation
+
+sensitivity
+
+invariance
+
+causal discipline
+
+next-test selection
+
+Use this to prevent over-indexing on one skill.
+
+62. No customer-facing language
+
+Remove completely:
+
+AE view
+
+customer framing
+
+customer-safe report
+
+client presentation
+
+growth recommendation deck
+
+This suite exists only to improve:
+
+Operator judgment
+Product behavior
+AI / ML regression quality
+
+63. What the artifact informs
+
+Growth Operator
+
+Which reasoning behaviors are unreliable?
+
+Head of GQR
+
+Where does the vertical need stronger operator/product playbooks?
+
+Product
+
+Which reasoning behavior needs to change?
+
+AI / ML
+
+Which exact regression test should block a reasoning update?
+
+It does NOT inform the customer directly.
+
+Hilbert remains the customer-facing system.
+
+64. Product Note is the terminal output
+
+The suite should terminate with:
+
+Failure
+↓
+Expected behavior
+↓
+Regression test ID
+↓
+Product Note
+
+No competing diagnosis layer.
+
+65. Interview demo
+
+Keep under 3 minutes.
+
+Show release version and provenance.
+
+Open a real contrastive pair.
+
+Paste two answers.
+
+Run assertions.
+
+Show a precise failure.
+
+Show the Product Note / regression test ID.
+
+Close with:
+
+Hilbert already has the reasoning product and is explicitly building systematic eval infrastructure, so I didn't build another evaluator or another customer-facing analysis. I built a new GQR reasoning test pack that can plug into whatever eval system you already use.
+
+66. Why this is more useful than a normal Gold Set
+
+Previous:
+
+case
+→ answer
+→ rubric score
+
+Better:
+
+real case A
++
+real case B
+→ behavioral relationship
+→ pass/fail contract
+
+This reduces subjectivity.
+
+It also catches systems that memorize safe language without responding to the actual mechanic.
+
+67. Accuracy target
+
+Target:
+
+>=75% of test assertions deterministic / rule-based
+<=25% human / model-assisted judgment
+
+The suite should rely on:
+
+exact transaction calculations,
+
+source labels,
+
+pairwise expected behavior,
+
+forbidden unsupported claims,
+
+explicit tolerances.
+
+68. MVP
+
+Start smaller than Core 24 if necessary.
+
+A compelling first version can be:
+
+12 real base cases
+12 paired tests
+1 runner screen
+1 result screen
+1 failure screen
+
+Then grow to Core 24.
+
+The hard work is selecting good tests, not building infrastructure.
+
+That is appropriate for a Growth Operator artifact.
+
+69. Final success test
+
+The project is successful if it can discover a bug like:
+
+Hilbert gives the same "healthy growth" diagnosis to:
+
+A:
+Revenue/customer +8%
+Visits/customer +10%
+AOV -2%
+
+B:
+Revenue/customer +8%
+Visits/customer -9%
+AOV +19%
+
+and convert that into:
+
+FAILURE:
+Revenue growth masked frequency deterioration.
+
+EXPECTED BEHAVIOR:
+Differentiate frequency-led vs basket-led growth.
+
+REGRESSION TEST:
+GQR-FREQ-004
+
+That is useful.
+
+70. Final rule
+
+Do not ask whether Hilbert gives a persuasive answer.
+
+Ask whether Hilbert's behavior changes correctly when the growth mechanics change.
+
+Build a new, real-data, contrastive reasoning unit-test pack that makes GQR reasoning failures reproducible.1

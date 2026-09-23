@@ -1,357 +1,422 @@
-// Core domain types for Trace — Enterprise Agent Diagnostic
+/**
+ * Hilbert Growth Operator Workbench — data model.
+ *
+ * Everything rendered here is a synthetic demo dataset built around a
+ * fictional customer, Northstar Market. It is a portfolio artifact, not
+ * real Hilbert or customer data.
+ */
 
-export type Confidence = "high" | "medium" | "low";
-export type Actor = "human" | "system" | "agent";
-export type Severity = "low" | "medium" | "high" | "critical";
-export type Difficulty = "standard" | "edge" | "adversarial";
-export type VerifierType = "deterministic" | "llm" | "agent";
-export type VerifierScope = "trajectory" | "output" | "both";
+// ---------------------------------------------------------------------------
+// Investigations
+// ---------------------------------------------------------------------------
 
-export type Expert = {
+export type InvestigationStatus =
+  | "new"
+  | "testing"
+  | "validated"
+  | "rejected"
+  | "waiting_for_data"
+  | "ready_for_customer"
+  | "closed";
+
+export type InvestigationCategory =
+  | "Acquisition"
+  | "Retention"
+  | "Basket"
+  | "Loyalty"
+  | "Promotions"
+  | "Assortment"
+  | "Channel"
+  | "Pricing";
+
+export type HypothesisStatus = "untested" | "supported" | "partially_supported" | "ruled_out" | "inconclusive";
+
+export type EvidenceType = "descriptive" | "predictive" | "matched" | "experimental" | "causal";
+
+export interface Hypothesis {
   id: string;
-  name: string;
-  role: string;
-  domain: string;
-  tenureYears: number;
-  avatarInitials: string;
-};
-
-export type Interview = {
-  id: string;
-  expertId: string;
-  date: string;
-  durationMinutes: number;
-  transcript: string;
-  systemsReferenced: string[];
-  painPoints: string[];
-  openQuestions: string[];
-  qualityCriteria: string[];
-  edgeCasesNoted: string[];
-  objectives: string[];
-  signals: string[];
-  decisionRules: string[];
-  exceptions: string[];
-  constraints: string[];
-  metrics: string[];
-  extraction?: WorkflowExtraction;
-};
-
-export type WorkflowExtraction = {
-  steps: WorkflowStep[];
-  tacitRules: TacitRule[];
-  extractedAt: string;
-};
-
-export type WorkflowStep = {
-  id: string;
-  order: number;
   label: string;
-  description: string;
-  actor: Actor;
-  systems: string[];
-  judgmentRequired: boolean;
-  evidenceIds: string[];
-};
+  statement: string;
+  status: HypothesisStatus;
+  evidenceFor: string[];
+  evidenceAgainst: string[];
+  confidence: number;
+}
 
-export type TacitRule = {
+export interface EvidenceItem {
   id: string;
-  rule: string;
-  rationale: string;
-  evidenceIds: string[];
-  confidence: Confidence;
-  category: "risk-judgment" | "prioritization" | "data-handling" | "escalation" | "output-quality";
-};
-
-export type FreshnessTag = "stale" | "incomplete" | "unreliable" | "access-restricted";
-
-export type SystemNode = {
-  id: string;
-  name: string;
-  kind: "system";
-  owner: string;
-  freshness: string;
-  freshnessTags: FreshnessTag[];
-  reliability: "high" | "medium" | "low";
-  accessScope: string;
-  knownGaps: string[];
-};
-
-export type PersonNode = {
-  id: string;
-  name: string;
-  kind: "person";
-  role: string;
-};
-
-export type ObjectNode = {
-  id: string;
-  name: string;
-  kind: "object";
-  description: string;
-  sourceSystemIds: string[];
-};
-
-export type GraphNode = SystemNode | PersonNode | ObjectNode;
-
-export type GraphEdge = {
-  id: string;
+  title: string;
+  type: EvidenceType;
+  metric?: string;
+  result: string;
   source: string;
-  target: string;
-  label: string;
-};
+  caveat?: string;
+}
 
-export type ContextGap = {
+export interface ValidationCheck {
+  id: string;
+  label: string;
+  completed: boolean;
+  result?: string;
+}
+
+export interface RecommendedAction {
   id: string;
   title: string;
   description: string;
-  severity: Severity;
-  owner: string;
-  resolution: string;
-  impactOnAgent: string;
-  status: "open" | "in-progress" | "resolved";
-};
+  expectedImpact: number;
+  impactHorizon: string;
+  timeToSignal: string;
+  risk: "low" | "medium" | "high";
+  measurementPlan: string[];
+  recommended?: boolean;
+}
 
-export type OpportunityScore = {
-  businessValue: number;
-  aiSuitability: number;
-  dataReadiness: number;
-  executionFeasibility: number;
-  evaluationReadiness: number;
-  deploymentSafety: number;
-  timeToValue: number;
-};
-
-export type OpportunityCandidate = {
-  id: string;
-  workflowName: string;
-  oneLiner: string;
-  scores: OpportunityScore;
-  whyScoreNotes?: Partial<Record<keyof OpportunityScore, string>>;
-  whyThisWorkflow?: string[];
-  whyNotFullyAutonomous?: string;
-  recommendedMaturity?: string;
-  selected: boolean;
-};
-
-export type EvidenceRef = {
-  id: string;
-  interviewId: string;
-  tacitRuleId?: string;
+export interface DriverContribution {
   label: string;
-};
+  pct: number;
+}
 
-export type AgentSpecRule = {
+export interface UnknownItem {
   id: string;
-  rule: string;
-  evidence: EvidenceRef[];
-};
+  statement: string;
+  potentialImpact: string;
+  changesRecommendation: boolean;
+  followUpRequired: string;
+}
 
-export type AgentSpec = {
+export interface Investigation {
   id: string;
-  version: number;
-  name: string;
-  objective: string;
+  slug: string;
+  title: string;
+  question: string;
   trigger: string;
-  users: string[];
-  environmentSystemIds: string[];
-  inputs: string[];
-  requiredOutputs: string[];
-  allowedActions: string[];
-  prohibitedActions: string[];
-  approvalGates: string[];
-  escalationRules: string[];
-  rules: AgentSpecRule[];
-  architecture: {
-    integrations: string[];
-    skills: { name: string; tools: string[] }[];
-    subagents?: { name: string; scope: string }[];
-  };
-  changelog: string;
+  category: InvestigationCategory;
+  additionalCategories?: InvestigationCategory[];
+  economicImpact: number;
+  impactHorizon: string;
+  hilbertConfidence: number;
+  operatorStatus: InvestigationStatus;
+  operatorConfidence?: "Low" | "Medium" | "High";
+  customerStatus: "not_shared" | "draft" | "shared";
+  hilbertAnswer: string;
+  hilbertPrimaryDriver?: string;
+  hilbertSecondaryDriver?: string;
+  hilbertLeadingIndicator?: string;
+  operatorNote?: string;
+  operatorConclusion?: string;
+  hypotheses: Hypothesis[];
+  evidence: EvidenceItem[];
+  validationChecks: ValidationCheck[];
+  recommendedActions: RecommendedAction[];
+  driverDecomposition?: DriverContribution[];
+  unknowns: UnknownItem[];
+  updatedAt: string;
+}
+
+// ---------------------------------------------------------------------------
+// Product feedback
+// ---------------------------------------------------------------------------
+
+export type FeedbackType = "reasoning" | "metric_semantics" | "data_quality" | "causal_reasoning" | "segment_definition";
+export type FeedbackStatus = "open" | "triaged" | "accepted" | "shipped";
+
+export interface ProductFeedback {
+  id: string;
+  customer: string;
+  investigationId?: string;
+  title: string;
+  hilbertOutput: string;
+  operatorFinding: string;
+  businessConsequence?: string;
+  type: FeedbackType;
+  severity: "low" | "medium" | "high";
+  reproducible: boolean;
+  reproSteps?: string;
+  relevantQuery?: string;
+  recommendedFix: string;
+  affectedCustomers?: string;
+  urgency?: "low" | "medium" | "high";
+  status: FeedbackStatus;
   createdAt: string;
-};
+}
 
-export type Verifier = {
+// ---------------------------------------------------------------------------
+// Decision log
+// ---------------------------------------------------------------------------
+
+export interface DecisionLogEntry {
   id: string;
+  investigationId?: string;
+  finding: string;
+  judgment: string;
+  action: string;
+  actionDate: string;
+  result?: {
+    measuredAt: string;
+    metrics: { label: string; value: string; tone: "positive" | "negative" | "neutral" }[];
+  };
+  learning?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Customer
+// ---------------------------------------------------------------------------
+
+export interface CustomerProfile {
   name: string;
-  description: string;
-  type: VerifierType;
-  scope: VerifierScope;
-  weight: number;
-  blocking: boolean;
-  threshold: number;
-};
+  synthetic: true;
+  businessType: string;
+  market: string;
+  knownCustomers: number;
+  locations: number;
+  channels: string[];
+  attributes: string[];
+}
 
-export type EnvironmentFixture = {
-  id: string;
-  name: string;
-  description: string;
-  dataCondition: "complete" | "missing" | "stale" | "contradictory";
-};
+export interface CustomerEconomics {
+  activeCustomers: number;
+  monthlyRevenue: number;
+  monthlyOrders: number;
+  aov: number;
+  ordersPerActiveCustomer: number;
+  repeat90d: number;
+  blendedCac: number;
+  p180Ltv: number;
+  loyaltyPenetration: number;
+  promoOrderShare: number;
+}
 
-export type EvalCase = {
-  id: string;
-  name: string;
-  task: string;
-  environmentId: string;
-  verifierIds: string[];
-  tags: string[];
-  difficulty: Difficulty;
-  accountCondition:
-    | "healthy"
-    | "renewal-risk"
-    | "expansion"
-    | "major-escalation"
-    | "low-usage"
-    | "new-implementation";
-  requestType: "qbr" | "renewal-meeting" | "executive-escalation" | "expansion-conversation";
-};
-
-export type VerifierResult = {
-  verifierId: string;
-  score: number;
-  passed: boolean;
-};
-
-export type EvalResult = {
-  evalCaseId: string;
-  passed: boolean;
-  verifierResults: VerifierResult[];
-};
-
-export type ExperimentConfig = {
-  model: string;
-  promptVersion: string;
-  tools: string[];
-  reasoning: "low" | "medium" | "high";
-};
-
-export type ExperimentStatus = "baseline" | "rejected" | "candidate" | "committed";
-
-export type Experiment = {
-  id: string;
+export interface RevenueBridgeItem {
   label: string;
-  status: ExperimentStatus;
-  agentVersion: number;
-  config: ExperimentConfig;
-  score: number;
-  costPerTaskUsd: number;
-  latencySeconds: number;
-  evalSuiteVersion: string;
-  casesEvaluated: number;
-  runDate: string;
-  verifierBreakdown: { verifierId: string; score: number }[];
-  results: EvalResult[];
-  strengths: string[];
-  weaknesses: string[];
-  recommendation: string;
-  passedPilotThreshold: boolean;
-};
+  value: number;
+}
 
-export type Failure = {
+export interface CustomerQuestion {
   id: string;
-  evalCaseId: string;
-  experimentId: string;
-  title: string;
-  taskDescription: string;
-  observedBehavior: string;
-  expectedBehavior: string;
-  problem: string;
-  rootCause: string;
-  expertCorrection: string;
-  remediation: string;
-  action: "context-update" | "agent-spec-update" | "verifier-update";
-  regressionAdded: boolean;
-  status: "open" | "regression-added" | "resolved";
-};
+  question: string;
+  investigationId?: string;
+}
 
-export type PilotChecklistItem = {
-  id: string;
-  category: "business" | "data" | "agent" | "evaluation" | "security";
+// ---------------------------------------------------------------------------
+// Cohorts
+// ---------------------------------------------------------------------------
+
+export type AcquisitionChannel = "Paid Social" | "Paid Search" | "Organic" | "Referral";
+
+export interface CohortMonthPoint {
+  month: string;
+  repeat30d: number;
+}
+
+export interface CohortSeries {
+  channel: AcquisitionChannel;
+  points: CohortMonthPoint[];
+}
+
+export interface CohortEconomics {
+  cohortMonth: string;
+  channel: AcquisitionChannel;
+  customers: number;
+  cac: number;
+  firstOrderRevenue: number;
+  day30Repeat: number;
+  day60Repeat: number;
+  p180Ltv: number;
+  contributionMargin: number;
+  paybackDays: number;
+}
+
+export interface CohortDiff {
   label: string;
-  status: "done" | "pending" | "blocked";
-  detail: string;
-};
+  cohortA: string;
+  cohortB: string;
+  deltas: { metric: string; value: number; unit: "pp" | "pct" }[];
+}
 
-export type PilotDecision = {
+// ---------------------------------------------------------------------------
+// Basket & frequency
+// ---------------------------------------------------------------------------
+
+export interface FrequencyPoint {
+  period: string;
+  visitsPerHousehold: number;
+  segment: string;
+}
+
+export interface BasketComposition {
+  basketValue: number;
+  itemsPerBasket: number;
+  effectivePricePerItem: number;
+  categoryBreadth: number;
+  privateLabelShare: number;
+  promotedItemShare: number;
+}
+
+export interface CategoryAttach {
+  category: string;
+  penetration: number;
+  attachRate: number;
+  frequencyLift: number;
+  margin: number;
+  repeatAssociation: number;
+  confidence: "Low" | "Medium" | "High";
+}
+
+export interface FrequencyBasketQuadrantPoint {
+  segment: string;
+  frequency: number;
+  basket: number;
+  customers: number;
+}
+
+// ---------------------------------------------------------------------------
+// Promotions
+// ---------------------------------------------------------------------------
+
+export interface PromotionRow {
   id: string;
-  requiredActions: string[];
-  checklist: PilotChecklistItem[];
-};
+  offer: string;
+  customers: number;
+  redemption: number;
+  incrementalConversion: number;
+  repeat30d: number;
+  incrementalMargin: number;
+  p180Ltv: number;
+  likelyIncrementality: "Low" | "Medium" | "High";
+  status: "Active" | "Testing" | "Retired";
+}
 
-export type Blocker = {
+export interface PromoIncrementality {
+  offer: string;
+  observedConversionLift: number;
+  matchedIncrementalConversion: number;
+  firstOrderMarginDelta: number;
+  repeat90dDelta: number;
+  p180Contribution: number;
+}
+
+export interface PromoScatterPoint {
+  customerId: string;
+  discountPct: number;
+  repeat90d: number;
+  customers: number;
+  channel: AcquisitionChannel;
+}
+
+// ---------------------------------------------------------------------------
+// Channels
+// ---------------------------------------------------------------------------
+
+export interface ChannelRow {
+  channel: string;
+  spend: number;
+  customers: number;
+  mixChangePP: number;
+  cac: number;
+  firstOrderRoas: number | null;
+  repeat30d: number;
+  p180Ltv: number;
+  contributionPerCustomer: number;
+  qualityTrend: number;
+}
+
+// ---------------------------------------------------------------------------
+// Loyalty
+// ---------------------------------------------------------------------------
+
+export interface LoyaltyComparisonRow {
+  group: "Members" | "Matched non-members" | "Raw non-members";
+  frequency: number;
+  basket: number;
+  retention: number;
+  p180Ltv: number;
+  contribution: number;
+}
+
+// ---------------------------------------------------------------------------
+// Win-back / assortment
+// ---------------------------------------------------------------------------
+
+export interface WinBackSummary {
+  eligibleCustomers: number;
+  expectedReactivationRate: number;
+  recoveredContribution: number;
+  criteria: string[];
+}
+
+// ---------------------------------------------------------------------------
+// SQL Lab
+// ---------------------------------------------------------------------------
+
+export interface SqlColumn {
+  name: string;
+  type: string;
+}
+
+export interface SqlTableSchema {
+  table: string;
+  columns: SqlColumn[];
+}
+
+export interface SavedQuery {
   id: string;
   title: string;
   description: string;
-  verifierId?: string;
-  failureId: string;
+  sql: string;
+  resultId: string;
+}
+
+export interface SqlResultSet {
+  columns: string[];
+  rows: (string | number | null)[][];
+  rowsScanned: number;
+  durationMs: number;
+  chartHint?: "bar" | "line" | "scatter";
+}
+
+// ---------------------------------------------------------------------------
+// Data health
+// ---------------------------------------------------------------------------
+
+export interface DataHealthMetric {
+  label: string;
+  value: number;
+}
+
+export interface DataSourceRow {
+  source: string;
+  freshness: string;
+  completeness: number;
+  status: "Healthy" | "Degraded" | "Failing";
+}
+
+export interface DataHealthIssue {
+  id: string;
+  description: string;
+  affectedAnalyses: string[];
+  severity: "Low" | "Medium" | "High";
+  workaround: string;
+  status: "Open" | "Monitoring" | "Resolved";
+}
+
+// ---------------------------------------------------------------------------
+// Readout
+// ---------------------------------------------------------------------------
+
+export interface ReadoutEntry {
+  investigationId: string;
+  finding: string;
+  chartHint?: string;
+  moneyAtStake: string;
+  action: string;
+  caveat: string;
+}
+
+export interface CustomerMoment {
+  title: string;
+  when: string;
+  needsReady: string;
+  outstandingAnalysis: string;
   owner: string;
-  remediation: string;
-  status: "open" | "resolved";
-};
-
-export type RoiAssumptions = {
-  briefsPerMonth: number;
-  currentPrepHours: number;
-  blendedHourlyCostUsd: number;
-  targetTimeReductionPct: number;
-  humanReviewMinutesRetained: number;
-  agentRunCostUsd: number;
-  implementationCostUsd: number;
-};
-
-export type RoiResult = {
-  currentAnnualLaborCostUsd: number;
-  projectedAnnualLaborCostUsd: number;
-  annualGrossSavingsUsd: number;
-  annualInferenceCostUsd: number;
-  netYearOneSavingsUsd: number;
-  paybackMonths: number;
-};
-
-export type ExecutiveReadout = {
-  id: string;
-  headline: string;
-  recommendation: string;
-  whyThisWorkflow: string[];
-  pilotRequirements: string[];
-  decisionsNeeded: string[];
-  generatedAt: string;
-};
-
-// Mercor Enterprise's real four-stage lifecycle (Discover/Deploy/Improve/Monetize), not a
-// Trace-invented taxonomy — see README for how this engagement's pages map onto each stage.
-export type EngagementStatus = "discover" | "deploy" | "improve" | "monetize";
-
-export type Engagement = {
-  id: string;
-  companyName: string;
-  companySize: string;
-  businessFunction: string;
-  useCase: string;
-  objective: string;
-  status: EngagementStatus;
-  lastUpdated: string;
-  qualityThreshold: number;
-};
-
-export type EngagementState = {
-  engagement: Engagement;
-  experts: Expert[];
-  interviews: Interview[];
-  systems: SystemNode[];
-  people: PersonNode[];
-  objects: ObjectNode[];
-  edges: GraphEdge[];
-  contextGaps: ContextGap[];
-  opportunities: OpportunityCandidate[];
-  agentSpecs: AgentSpec[];
-  verifiers: Verifier[];
-  environments: EnvironmentFixture[];
-  evalCases: EvalCase[];
-  experiments: Experiment[];
-  failures: Failure[];
-  blockers: Blocker[];
-  pilotDecision: PilotDecision;
-  roiAssumptions: RoiAssumptions;
-  readout: ExecutiveReadout;
-};
+}
